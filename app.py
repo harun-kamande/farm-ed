@@ -1,19 +1,6 @@
 from flask import Flask, render_template, redirect, request, session, url_for,flash
 app=Flask(__name__)
-
-# @app.route("/")
-# def Hello():
-#     return render_template("home.html")
-
-# @app.route("/page")
-# def page():
-#     return f"Hello page"
-# @app.route("/open")
-# def open():
-#     return render_template("open.html")
-# @app.route("/home")
-# def home():
-#     return render_template("home.html")
+im= "images/Kamande. - Copy.jpg"
 
 @app.route("/")
 def landing():
@@ -21,7 +8,7 @@ def landing():
 
 @app.route("/home")
 def home():
-    return render_template("home.html")
+    return render_template("home.html",im=im)
 
 @app.route("/content")
 def content():
@@ -37,7 +24,11 @@ def profile():
 
 @app.route("/logout")
 def logout():
-    return render_template("landing.html")
+    return render_template("landing.html",im=im)
+
+@app.route("/create")
+def create():
+    return render_template("create.html")
 
 if __name__=="__main__":
     app.run(debug=True)
