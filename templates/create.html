@@ -11,40 +11,48 @@
         }
         .login-form {
             max-width: 300px;
-            margin: 0 auto;
-            margin-top: 1px;
+            margin: 50px auto;
             background-color: #0a0c91;
             padding: 20px;
             border-radius: 5px;
-            margin-bottom: 500px;
+            color: white;
+        }
+        .login-form .form-label {
+            color: white;
+        }
+        .btn-custom {
+            background-color: #0a0c91;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #08076b;
         }
     </style>
 </head>
 <body>
-    <div class="container container-responsive">
-        <div class="login-form">
-            <h2 class="text-center mb-2">Create Account</h2>
-            <form>
-                <div class="mb-2">
+    <div class="container">
+        <div class="login-form mt-0">
+            <h2 class="text-center mb-1">Create Account</h2>
+            <form method="POST">
+                <div class="mb-1">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control" id="username" placeholder="Enter your username">
                 </div>
-                <div class="mb-2">
+                <div class="mb-1">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" placeholder="Enter your email">
                 </div>
-                <div class="mb-2">
+                <div class="mb-1">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" placeholder="Enter your password">
                 </div>
-                <div class="mb-2">
-                    <label for="password" class="form-label">Password</label>
+                <div class="mb-1">
+                    <label for="password2" class="form-label">Confirm Password</label>
                     <input type="password" class="form-control" id="password2" placeholder="Re-enter your password">
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Create</button>
+                <button type="submit" class="btn btn-custom btn-block w-100">Create</button>
             </form>
         </div>
     </div>
-   
-</body>
+   </body>
 </html>

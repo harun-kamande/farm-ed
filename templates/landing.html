@@ -12,33 +12,58 @@
             background-color: #f8f9fa;
         }
         .login-form {
-            max-width: 400px;
+            max-width: 300px;
             margin: 0 auto;
-            margin-top: 1px;
+            margin-top: 5px;
             background-color: #1d0ea0;
-            padding: 20px;
-            border-radius: 5px;
-    
+            padding: 5px;
+            border-radius: 25%;
+            text-align: center;
+        }
+        .login-form img {
+            margin-bottom: 15px;
+        }
+        .login-form h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .login-form .form-label {
+            font-size: 14px;
+        }
+        .login-form .form-control {
+            font-size: 14px;
+            padding: 5px;
+        }
+        .login-form .btn {
+            font-size: 14px;
+            padding: 5px 10px;
+        }
+        .login-form a {
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="login-form">
-            <h2 class="text-center mb-2">Login</h2>
+            <img src="{{url_for('static', filename='')}}" alt="Logo" height="37" width="37" class="img rounded-circle">
+            <h2 class="text-center">Login</h2>
+            
             <form>
-                <div class="mb-2">
+                <div class="mb-0">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control" id="username" placeholder="Enter your username">
                 </div>
-                <div class="mb-2">
+                <div class="mb-0">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" placeholder="Enter your password">
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Login</button> You don't have an account?? 
-                 <a href="{{url_for('create')}}">create one here</a>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <div class="mt-0">
+                    You don't have an account?? <a href="{{url_for('create')}}">Create one here</a>
+                </div>
             </form>
         </div>
     </div>
-   </body>
+</body>
 </html>

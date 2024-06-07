@@ -4,7 +4,7 @@ im= "images/Kamande. - Copy.jpg"
 
 @app.route("/")
 def landing():
-    return render_template("landing.html")
+    return render_template("landing.html",im=im)
 
 @app.route("/home")
 def home():
