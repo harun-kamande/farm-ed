@@ -1,14 +1,14 @@
 from flask import Flask, render_template, redirect, request, session, url_for,flash
 app=Flask(__name__)
-im= "images/Kamande. - Copy.jpg"
+# im= "images/Kamande. - Copy.jpg"
 
 @app.route("/")
 def landing():
-    return render_template("landing.html",im=im)
+    return render_template("landing.html")
 
 @app.route("/home")
 def home():
-    return render_template("home.html",im=im)
+    return render_template("home.html")
 
 @app.route("/content")
 def content():
@@ -24,14 +24,15 @@ def profile():
 
 @app.route("/logout")
 def logout():
-    return render_template("landing.html",im=im)
+    return render_template("landing.html")
 
-@app.route("/create")
+@app.route("/create", methods=["POST","GET"])
 def create():
+    
     return render_template("create.html")
 
-@app.route("/post")
-def posst():
+@app.route("/post",methods=["POST","GET"])
+def post():
     return render_template("post.html")
 
 if __name__=="__main__":
