@@ -1,0 +1,20 @@
+{% extends 'home.html' %}
+
+{% block content %}
+<marquee behavior="scroll" direction="left">
+<div class="container bg-success container-fluid mt-0">Share your experience here</div>
+</marquee>
+    <div class="container mt-1 bg-primary rounded p-3">
+        <form action="#" method="post">
+            <div class="mb-1">
+                <label for="title" class="form-label text-white">Topic</label>
+                <input type="text" id="title" name="title" placeholder="Write your private topic of concern here" class="form-control" required>
+            </div>
+            <div class="mb-1">
+                <label for="post" class="form-label text-white">Concern</label>
+                <textarea class="form-control" name="post" id="post" rows="3" placeholder="Write your concern here" required></textarea>
+            </div>
+            <input type="submit" value="sSend" class="btn btn-outline-warning">
+        </form>
+    </div>
+{% endblock %}
