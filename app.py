@@ -1,13 +1,13 @@
 from flask import Flask, render_template, redirect, request, session, url_for,flash
 app=Flask(__name__)
-# im= "images/Kamande. - Copy.jpg"
+im= "images/Kamande. - Copy.jpg"
 @app.route("/")
 def landing():
     return render_template("landing.html")
 
 @app.route("/home")
 def home():
-    return render_template("home.html")
+    return render_template("home.html",im=im)
 
 @app.route("/content")
 def content():
@@ -33,5 +33,8 @@ def create():
 def post():
     return render_template("post.html")
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=5000)
+
+if __name__=="__main__":
+    app.run(debug=True)

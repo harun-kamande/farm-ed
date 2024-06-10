@@ -9,7 +9,7 @@
 
     <style>
         body {
-            background-color: #f8f9fa;
+            background-image: url("{{url_for('static', filename='images/pexels-therato-3374210.jpg')}}");
         }
         .login-form {
             max-width: 300px;
@@ -44,10 +44,12 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="login-form">
-            <img src="{{url_for('static', filename='')}}" alt="Logo" height="37" width="37" class="img rounded-circle">
+    <div class="container mt-4">
+        <div class="login-form mt-4">
+        <a href="{{url_for('static', filename='images/image.png')}}" class="navbar-brand rounded-circle" height="37" width="37">
+            <img src="{{url_for('static', filename='images/image.png')}}" alt="Logo" height="37" width="37" class="img rounded-circle">
             <h2 class="text-center">Login</h2>
+            </a>
             
             <form>
                 <div class="mb-0">
