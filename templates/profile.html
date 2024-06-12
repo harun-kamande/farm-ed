@@ -4,12 +4,16 @@
 <div
     class="card border-primary"
 >
-    <img class="card-img-top justify-content-center" src="holder.js/100px180/" alt="profile photo" />
+    <img class="card-img-top justify-content-center" src="#" alt="profile photo" />
+ 
     <div class="card-body">
         <h4 class="card-title">User name:___</h4>
         <p class="card-text">Date joined:___</p>
         <p class="card-text">Email:__</p>
     </div>
+    <button class="btn btn-outline-danger">
+    <a href="{{url_for('logout')}}" class="nav-link link-buttom-right">Logout</a>
+</button>
 </div>
 
 {% endblock%}

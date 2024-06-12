@@ -8,26 +8,60 @@
 <style>
   body{
     background-image: url("{{url_for('static', filename='images/pexels-therato-3374210.jpg')}}");
+    color: white;
   }  
 </style>
-<body id="body">
-  <div class="nav justify-content-center bg-warning">
-    <button class="btn btn-outline-success">
-      <a class="navbar-brand outline-primary" href="{{url_for('static', filename='images/image.png')}}">KIMO farmed</a>
-      </button>
-    <ul class="nav">
-      <li class="nav-item"><a href="{{url_for('home')}}" class="nav-link">Home</a></li>
-      <li class="nav-item"><a href="{{url_for('post')}}" class="nav-link">Post</a></li>
-      <li class="nav-item"><a href="{{url_for('content')}}" class="nav-link">Content</a></li>
-      <li class="nav-item"><a href="{{url_for('feedback')}}" class="nav-link">Feedback</a></li>
-      <li class="nav-item"><a href="{{url_for('profile')}}" class="nav-link">Profile</a></li>
-      <li class="nav-item"><a href="{{url_for('logout')}}" class="nav-link">Logout</a></li>
-    </ul>
-  </div>
+<div class="nav justify-content-center bg-warning nav-fluid nav-responsive">
   
+  <ul class="nav">
+    <li class="nav-item"><button class="btn btn-outline-success">
+      <a class="navbar-brand outline-primary" href="{{url_for('static', filename='images/image.png')}}">Kimo farmed</a>
+      </button></li>
+    <li class="nav-item"><a href="{{url_for('home')}}" class="nav-link">Home</a></li>
+    <li class="nav-item"><a href="{{url_for('post')}}" class="nav-link">Post</a></li>
+    <li class="nav-item"><a href="{{url_for('content')}}" class="nav-link">Content</a></li>
+    <li class="nav-item"><a href="{{url_for('feedback')}}" class="nav-link">Feedback</a></li>
+    <li class="nav-item"><a href="{{url_for('profile')}}" class="nav-link">Profile</a></li>
+    <li class="nav-item"><a href="{{url_for('notifications')}}" class="nav-link">notifications</a></li>
+ 
+  </ul>
+</div>
+<body id="body">
+  Thank you for visiting Kamande's system 😊😊😊😊😊, the system is still under development
+
 <div class="container mt-4">
   {% block content %}
-  hello world
+  <div
+    class="container container-fluid mx-0"
+  >
+  <video class="video" controls muted height="200px" width="200px">
+    <source src="{{url_for('static', filename='video/Snapinsta.app_video_437551285_1095074495050961_7991941923590345606_n.mp4')}}">
+</video> 
+<video class="video" controls muted height="200px" width="200px">
+  <source src="{{url_for('static', filename='video/Snapinsta.app_video_437551285_1095074495050961_7991941923590345606_n.mp4')}}">
+</video> 
+<video class="video" controls muted height="200px" width="200px">
+  <source src="{{url_for('static', filename='video/Snapinsta.app_video_437551285_1095074495050961_7991941923590345606_n.mp4')}}">
+</video> 
+<video class="video" controls muted height="200px" width="200px">
+  <source src="{{url_for('static', filename='video/Snapinsta.app_video_437551285_1095074495050961_7991941923590345606_n.mp4')}}">
+</video> 
+<video class="video" controls muted height="200px" width="200px">
+  <source src="{{url_for('static', filename='video/Snapinsta.app_video_437551285_1095074495050961_7991941923590345606_n.mp4')}}">
+</video> 
+<video class="video" controls muted height="200px" width="200px">
+  <source src="{{url_for('static', filename='video/Snapinsta.app_video_437551285_1095074495050961_7991941923590345606_n.mp4')}}">
+</video> 
+<video class="video" controls muted height="200px" width="200px">
+  <source src="{{url_for('static', filename='video/Snapinsta.app_video_437551285_1095074495050961_7991941923590345606_n.mp4')}}">
+</video> 
+
+
+
+
+  </div>
+  
+  
   {% endblock %}
 </div>
 

@@ -1,9 +1,10 @@
 from flask import Flask, render_template, redirect, request, session, url_for,flash
 app=Flask(__name__)
+
 im= "images/Kamande. - Copy.jpg"
 @app.route("/")
 def landing():
-    return render_template("landing.html")
+    return render_template("home.html")
 
 @app.route("/home")
 def home():
@@ -33,6 +34,13 @@ def create():
 def post():
     return render_template("post.html")
 
+@app.route("/admin")
+def admin():   
+        return render_template("admin.html")
+
+@app.route("/notifications", methods=["POST","GET"])
+def notifications():
+    return render_template("notifications.html")
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0', port=5000)
 
