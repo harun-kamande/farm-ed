@@ -22,8 +22,17 @@ def feedback():
 def profile():
     return render_template("profile.html")
 
-@app.route("/logout")
+@app.route("/logout",methods=["POST","GET"])
 def logout():
+    user="ooo"
+    passw="ooo"
+    if request.method=="POST":
+        user=request.form.get("username")
+        passw=request.form.get("password")
+
+    if user=="kamande" and passw=="kamande":
+        return render_template("home.html")
+    
     return render_template("landing.html")
 
 @app.route("/create", methods=["POST","GET"])
