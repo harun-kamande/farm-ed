@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, session, url_for,flash
 from flask_session import Session
+from db_util import get_db_connection
 app=Flask(__name__)
 
 
@@ -51,7 +52,7 @@ def logout():
 @app.route("/create", methods=["POST","GET"])
 def create():
 
-    connection=sqlite3.connect("users.db")
+    connection=get_db_connection()
     cursor=connection.cursor()
 
     if request.method=="POST":
@@ -61,7 +62,7 @@ def create():
       password=request.form.get("password")  
 
 
-      cursor.execute("INSERT INTO userdetails(username,email,password) VALUES(?,?,?)",(username,email,password))
+      cursor.execute("INSERT INTO user_details(user_name,email,user_password) VALUES(%s,%s,%s)",(username,email,password))
       cursor.close()
       connection.commit()
       return render_template("post.html")

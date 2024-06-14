@@ -7,10 +7,12 @@ def hello():
 
 @app.route("/cookie")
 def cook():
+    # Cookie setting from individual browser/ User
     res=make_response("<h1>Cookie is set</h1>")
     res.set_cookie("Id","Kamande")
+    session=request.cookies.get("session")
 
-    return res
+    return (f"{res} session is {session}")
 @app.route("/logout")
 def getout():
     res=make_response("<h1>You are about to logout</h1>")
@@ -18,7 +20,6 @@ def getout():
 
     return res
 
-    return res
 
 @app.route("/home")
 def read():
