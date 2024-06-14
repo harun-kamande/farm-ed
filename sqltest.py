@@ -16,22 +16,15 @@
 import sqlite3
 connection=sqlite3.connect("users.db")
 cursor=connection.cursor()
-lists = [
-    ('carol', 'carol@gmail.com'),
-    ('peter', 'peter@gmail.com'),
-    ('jose', 'jose@gmail.com')
-]
-cursor.execute("CREATE TABLE IF NOT EXISTS details(id INTEGER PRIMARY KEY,username TEXT,email TEXT UNIQUE)")
-# cursor.executemany("INSERT INTO details(username,email) VALUES(?,?)",lists)
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS userdetails(id INTEGER PRIMARY KEY,username TEXT,email TEXT UNIQUE,password TEXT)
 
-cursor.execute("SELECT username, email FROM details")
-users = cursor.fetchall()
+''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY,post TEXT, userid INTEGER,title TEXT, date TEXT, FOREIGN KEY(userid) REFERENCES userdetails(id))''')
 
+cursor.execute('''CREATE TABLE IF NOT EXISTS feedback(id INTEGER PRIMARY KEY,topic TEXT, concern TEXT, date TEXT, userid INTEGER, FOREIGN KEY(userid) REFERENCES userdatails(id))''')
 
-
-for data in users:
-    print(data[1])
-print(users)
+cursor.execute('''CREATE TABLE IF NOT EXISTS profilepic(id INTEGER PRIMARY KEY,photo TEXT,userid INTEGER, FOREIGN KEY(userid) REFERENCES userdetails(id))''')
 
 cursor.close()
 connection.commit()

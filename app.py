@@ -1,6 +1,15 @@
 from flask import Flask, render_template, redirect, request, session, url_for,flash
 app=Flask(__name__)
 
+
+app.config["SECRET_KEY"] = "dont tell anyone"
+
+
+
+import sqlite3
+
+
+
 im= "images/Kamande. - Copy.jpg"
 @app.route("/")
 def landing():
@@ -24,19 +33,42 @@ def profile():
 
 @app.route("/logout",methods=["POST","GET"])
 def logout():
-    user="ooo"
-    passw="ooo"
-    if request.method=="POST":
-        user=request.form.get("username")
-        passw=request.form.get("password")
+    connection=sqlite3.connect("users.db")
+    cursor=connection.cursor()
+    cursor.execute("SELECT username,password FROM userdetails")
+    details=cursor.fetchall()
 
-    if user=="kamande" and passw=="kamande":
-        return render_template("home.html")
-    
+    if request.method=="POST":
+        username=request.form.get("username")
+        password=request.form.get("password")
+        if username== details[0][0] and password == details[0][1]:
+            return render_template("post.html")
+        else:
+            return render_template("landing.html")
     return render_template("landing.html")
 
 @app.route("/create", methods=["POST","GET"])
-def create():    
+def create():
+    connection=sqlite3.connect("users.db")
+    cursor=connection.cursor()
+    if request.method=="POST":
+      username=request.form.get("username") 
+      email=request.form.get("email")
+      password=request.form.get("password")
+      password2=request.form.get("password2")
+
+      if password != password2:
+          flash("password didn't match")
+      else:
+          cursor.execute("INSERT INTO userdetails(username,email,password) VALUES(?,?,?)",(username,email,password))
+          cursor.close()
+          connection.commit()
+          return render_template("landing.html")
+      
+    else:
+        return render_template("create.html")
+
+
     return render_template("create.html")
 
 @app.route("/post",methods=["POST","GET"])

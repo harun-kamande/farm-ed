@@ -1,1 +1,5 @@
-static/*
+# static/*
+# /static/image/
+# /static/video/
+/static/image/
+/static/video/
