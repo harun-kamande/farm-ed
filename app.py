@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, request, session, url_for,flash
+from flask_session import Session
 app=Flask(__name__)
 
 
@@ -49,22 +50,22 @@ def logout():
 
 @app.route("/create", methods=["POST","GET"])
 def create():
+
     connection=sqlite3.connect("users.db")
     cursor=connection.cursor()
+
     if request.method=="POST":
+      
       username=request.form.get("username") 
       email=request.form.get("email")
-      password=request.form.get("password")
-      password2=request.form.get("password2")
+      password=request.form.get("password")  
 
-      if password != password2:
-          flash("password didn't match")
-      else:
-          cursor.execute("INSERT INTO userdetails(username,email,password) VALUES(?,?,?)",(username,email,password))
-          cursor.close()
-          connection.commit()
-          return render_template("landing.html")
-      
+
+      cursor.execute("INSERT INTO userdetails(username,email,password) VALUES(?,?,?)",(username,email,password))
+      cursor.close()
+      connection.commit()
+      return render_template("post.html")
+    
     else:
         return render_template("create.html")
 

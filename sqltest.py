@@ -28,3 +28,8 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS profilepic(id INTEGER PRIMARY KEY,p
 
 cursor.close()
 connection.commit()
+
+import datetime
+import time
+times=datetime.datetime.now()
+print(times.strftime("%B %d  %Y time %H:%M"))
