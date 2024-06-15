@@ -24,7 +24,23 @@ def home():
 
 @app.route("/content")
 def content():
-    return render_template("content.html")
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT user_details.user_name, posts.title, posts.post, posts.date_posted
+        FROM posts
+        INNER JOIN user_details ON posts.user_id = user_details.id
+                   ORDER BY posts.date_posted DESC
+    """)
+    
+    posts = cursor.fetchall()
+    
+    cursor.close()
+    connection.close()
+
+    return render_template("content.html", posts=posts)
+
 
 @app.route("/feedback",methods=['POST','GET'])
 def feedback():
@@ -70,8 +86,8 @@ def create():
             flash("Account is taken, please choose another email")
         else:
             cursor.execute(
-                "INSERT INTO user_details (user_name, email, user_password) VALUES (%s, %s, %s)",
-                (username, email, password)
+                "INSERT INTO user_details (user_name, email, user_password,date_joined) VALUES (%s, %s, %s,%s)",
+                (username, email, password,datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"))
             )
             flash("Account created successfully!")
             
@@ -96,7 +112,7 @@ def post():
 
 
         connection.commit()
-        return render_template("content.html")
+        return redirect(url_for('content'))
 
     return render_template("post.html")
 

@@ -3,18 +3,21 @@
 <div class="container mt-2 mb-0 bg-primary text-white">
     <center>POSTS</center>
 </div>
+{% for post in posts %}
 <div class="container bg-warning mt-2 p-3">
     <div class="post mb-3">
         <div class="nav mb-2">
-            <strong>Name:</strong> John Doe<br>
-            <strong>Date:</strong> June 9, 2024<br>
-            <strong>Data:</strong> Some relevant data here
+            <strong>Name:</strong> {{ post[0] }}<br>
+            <strong>Post title:</strong> {{ post[1] }}<br>
+            <strong>Date:</strong> {{ post[3] }}
         </div>
         <div class="post-content">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam nesciunt repellat vero corporis in aliquid quas cupiditate enim quos. Iste tenetur iure aperiam eveniet beatae hic nulla illum rem. Nemo.
+            {{ post[2] }}
         </div>
     </div>
-    
     <div class="card rounded"></div>
 </div>
+
+{% endfor %}
 {% endblock %}
+
