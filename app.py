@@ -8,6 +8,8 @@ app=Flask(__name__)
 
 app.config["SECRET_KEY"] = "dont tell anyone"
 
+
+
 @app.route("/profile")
 def profile():
     email=request.cookies.get("id")
@@ -16,6 +18,9 @@ def profile():
     cursor.execute("""SELECT user_name,date_joined,email FROM user_details WHERE email=%s""",(email,))
     data=cursor.fetchall()
     return render_template("profile.html",data=data)
+
+
+
 
 @app.route("/firstpage", methods=["POST","GET"])
 def firstpage():
@@ -126,7 +131,12 @@ def post():
         connection = get_db_connection()
         cursor = connection.cursor()
 
-        cursor.execute("INSERT INTO posts (title, post, date_posted, user_id) VALUES (%s, %s, %s, %s)", (post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), 1))
+        email=request.cookies.get("id")
+        cursor.execute("SELECT id FROM user_details WHERE email=%s",(email,))
+
+        user_id=cursor.fetchall()
+
+        cursor.execute("INSERT INTO posts (title, post, date_posted, user_id) VALUES (%s, %s, %s, %s)", (post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0]))
 
 
         connection.commit()
