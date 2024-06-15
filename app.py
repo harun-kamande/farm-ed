@@ -10,17 +10,16 @@ app.config["SECRET_KEY"] = "dont tell anyone"
 
 
 
-@app.route("/land")
-def go_home():
-    resp=make_response(render_template("login.html"))
+@app.route("/landingpage", methods=["POST","GET"])
+def notifications():
+    resp=make_response(redirect(url_for("login")))
     resp.set_cookie("id","",expires=0)
-
     return resp
 
 
 @app.route("/")
 def landing():
-    return render_template("home.html")
+    return render_template("login.html")
 
 @app.route("/home")
 def home():
@@ -105,6 +104,7 @@ def create():
             flash("Account created successfully!")
             
             connection.commit()
+            return redirect(url_for('login'))
 
     cursor.close()
     connection.close()
@@ -134,11 +134,12 @@ def post():
 def admin():   
         return render_template("admin.html")
 
-@app.route("/notifications", methods=["POST","GET"])
-def notifications():
-    return render_template("notifications.html")
+
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0', port=5000)
+
+
+
 
 if __name__=="__main__":
     app.run(debug=True)
