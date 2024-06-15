@@ -10,7 +10,12 @@ app.config["SECRET_KEY"] = "dont tell anyone"
 
 @app.route("/profile")
 def profile():
-    return render_template("profile.html")
+    email=request.cookies.get("id")
+    connection=get_db_connection()
+    cursor=connection.cursor()
+    cursor.execute("""SELECT user_name,date_joined,email FROM user_details WHERE email=%s""",(email,))
+    data=cursor.fetchall()
+    return render_template("profile.html",data=data)
 
 @app.route("/firstpage", methods=["POST","GET"])
 def firstpage():
@@ -19,9 +24,9 @@ def firstpage():
 
     return resp
 
-@app.route("/")
+@app.route("/",methods=["POST","GET"])
 def landing():
-    return render_template("login.html")
+    return redirect(url_for('login'))
 
 @app.route("/home")
 def home():
