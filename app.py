@@ -8,14 +8,16 @@ app=Flask(__name__)
 
 app.config["SECRET_KEY"] = "dont tell anyone"
 
+@app.route("/profile")
+def profile():
+    return render_template("profile.html")
 
-
-@app.route("/landingpage", methods=["POST","GET"])
-def notifications():
+@app.route("/firstpage", methods=["POST","GET"])
+def firstpage():
     resp=make_response(redirect(url_for("login")))
     resp.set_cookie("id","",expires=0)
-    return resp
 
+    return resp
 
 @app.route("/")
 def landing():
@@ -49,9 +51,7 @@ def content():
 def feedback():
     return render_template("feedback.html")
 1
-@app.route("/profile")
-def profile():
-    return render_template("profile.html")
+
 
 # Point to be explored
 @app.route("/login", methods=["POST", "GET"])
