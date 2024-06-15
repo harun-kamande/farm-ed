@@ -30,6 +30,19 @@
     </style>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li class="nav bg-success">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+
+
     <div class="container">
         <div class="login-form mt-0">
             <h2 class="text-center mb-1">Create Account</h2>

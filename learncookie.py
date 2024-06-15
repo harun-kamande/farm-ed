@@ -17,6 +17,7 @@ def cook():
 def getout():
     res=make_response("<h1>You are about to logout</h1>")
     res.set_cookie("Id","", expires=0)
+    
 
     return res
 
