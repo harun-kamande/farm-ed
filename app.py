@@ -10,17 +10,21 @@ app.config["SECRET_KEY"] = "dont tell anyone"
 
 
 
+@app.route("/land")
+def go_home():
+    resp=make_response(render_template("login.html"))
+    resp.set_cookie("id","",expires=0)
+
+    return resp
 
 
-
-im= "images/Kamande. - Copy.jpg"
 @app.route("/")
 def landing():
     return render_template("home.html")
 
 @app.route("/home")
 def home():
-    return render_template("home.html",im=im)
+    return render_template("home.html")
 
 @app.route("/content")
 def content():
@@ -50,23 +54,32 @@ def feedback():
 def profile():
     return render_template("profile.html")
 
-@app.route("/login",methods=["POST","GET"])
-def logout():
-    if request.method=="POST":
-        email=request.form.get("email")
-        password=request.form.get("password")
+# Point to be explored
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
 
-        connection=get_db_connection()
-        cursor=connection.cursor()
-        cursor.execute("SELECT email,user_password FROM user_details WHERE email=%s AND user_password=%s",(email,password))
-        
-        user=cursor.fetchone()
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute("SELECT email, user_password FROM user_details WHERE email=%s AND user_password=%s", (email, password))
+
+        user = cursor.fetchone()
 
         if user:
-            return render_template("home.html")
+            resp = make_response(render_template("home.html")) 
+            resp.set_cookie("id", email)  
+            cursor.close()
+            connection.close()
+            return resp  
         else:
-            flash("WRONG PASSWORD OR EMAIL PLEASE TRY AGAIN LATER")
-    
+            
+            flash("Wrong password or email. Please try again later.")
+            cursor.close()
+            connection.close()
+            return render_template("login.html")  
+
     return render_template("login.html")
 
 @app.route("/create", methods=["POST", "GET"])
