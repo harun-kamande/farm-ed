@@ -1,5 +1,4 @@
 from flask import Flask, render_template, redirect, request, session, url_for, flash, make_response
-from flask_session import Session
 from db_util import get_db_connection
 import datetime
 import time
