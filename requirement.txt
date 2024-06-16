@@ -1,3 +1,0 @@
-Ive used port 3307 in mysql database
-
-mysql password is harunkamande
