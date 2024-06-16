@@ -42,8 +42,13 @@ def content():
     connection = get_db_connection()
     cursor = connection.cursor()
 
+    # selecting user id
+    my_email = request.cookies.get("id")
+    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
+    my_id = cursor.fetchall()
+
     cursor.execute("""
-        SELECT user_details.user_name, posts.title, posts.post, posts.date_posted
+        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted
         FROM posts
         INNER JOIN user_details ON posts.user_id = user_details.id
                    ORDER BY posts.date_posted DESC
@@ -54,7 +59,7 @@ def content():
     cursor.close()
     connection.close()
 
-    return render_template("content.html", posts=posts)
+    return render_template("content.html", posts=posts, id=my_id[0][0])
 
 
 @app.route("/feedback", methods=['POST', 'GET'])

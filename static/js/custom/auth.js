@@ -13,3 +13,7 @@ $(document).ready(function(){
 //         document.getElementById("flash-message").style.display='none';
 //     },4000)
 // }
+
+function see_mypost(){
+    document.getElementById("mypost").style.backgroundColor='green'
+}

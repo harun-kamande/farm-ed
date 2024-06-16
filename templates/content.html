@@ -1,21 +1,37 @@
-{% extends 'home.html' %}
-{% block content %}
+{% extends 'home.html' %} {% block content %}
 <div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="bg-primary text-white text-center py-2 mb-4 rounded">
-                <h3>POSTS</h3>
-            </div>
-            {% for post in posts %}
-            <div class="card mb-4 bg-light" >
-                <div class="card-body">
-                    <h5 class="card-title">{{ post[1] }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ post[3] }} by {{ post[0] }}</h6>
-                    <p class="card-text">{{ post[2] }}</p>
-                </div>
-            </div>
-            {% endfor %}
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="bg-primary text-white text-center py-2 mb-4 rounded">
+        <h3>POSTS</h3>
+      </div>
+
+      {% if posts %} {% for post in posts %}
+
+      <!-- This if statement checks whether i am the writer of the text by comparing the id of the poster and that of mine
+         if i am the writer of the post then it will highlight the post with a green back ground-->
+      {% if post[0] == id %}
+      <div class="card mb-4 bg-success">
+        <div class="card-body">
+          <h5 class="card-title">{{ post[2] }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            {{ post[4] }} by {{ post[1] }}
+          </h6>
+          <p class="card-text">{{ post[3] }}</p>
         </div>
+      </div>
+      {% else %}
+      <div class="card mb-4 bg-light">
+        <div class="card-body">
+          <h5 class="card-title">{{ post[2] }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+            {{ post[4] }} by {{ post[1] }}
+          </h6>
+          <p class="card-text">{{ post[3] }}</p>
+        </div>
+      </div>
+      {% endif %} {% endfor %} {% else %} {% endif %}
     </div>
+  </div>
 </div>
 {% endblock %}
