@@ -132,9 +132,11 @@ def post():
         cursor = connection.cursor()
 
         email=request.cookies.get("id")
+        
         cursor.execute("SELECT id FROM user_details WHERE email=%s",(email,))
 
-        user_id=cursor.fetchall()
+
+        user_id=cursor.fetchone()
 
         cursor.execute("INSERT INTO posts (title, post, date_posted, user_id) VALUES (%s, %s, %s, %s)", (post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0]))
 

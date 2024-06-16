@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
         body {
             background-image: url("{{url_for('static', filename='images/pexels-therato-3374210.jpg')}}");
         }
+
         .login-form {
             max-width: 300px;
             margin: 0 auto;
@@ -21,58 +23,71 @@
             border-radius: 25%;
             text-align: center;
         }
+
         .login-form img {
             margin-bottom: 15px;
         }
+
         .login-form h2 {
             font-size: 20px;
             margin-bottom: 15px;
         }
+
         .login-form .form-label {
             font-size: 14px;
         }
+
         .login-form .form-control {
             font-size: 14px;
             padding: 5px;
         }
+
         .login-form .btn {
             font-size: 14px;
             padding: 5px 10px;
         }
+
         .login-form a {
             font-size: 14px;
         }
     </style>
 
 </head>
+
 <body id="body">
     <div class="container mt-4">
         <div class="login-form mt-4">
-        <a href="{{url_for('static', filename='images/image.png')}}" class="navbar-brand rounded-circle" height="37" width="37">
-            <img src="{{url_for('static', filename='images/image.png')}}" alt="Logo" height="37" width="37" class="img rounded-circle">
-            <h2 class="text-center">Login</h2>
+            <a href="{{url_for('static', filename='images/image.png')}}" class="navbar-brand rounded-circle" height="37"
+                width="37">
+                <img src="{{url_for('static', filename='images/image.png')}}" alt="Logo" height="37" width="37"
+                    class="img rounded-circle">
+                <h2 class="text-center">Login</h2>
             </a>
             {% with messages = get_flashed_messages() %}
             {% if messages %}
-                <div id="flash-message">
-                    {% for message in messages %}
-                        <p style="color:red; font-size: 7px;">{{ message }}</p>
-                    {% endfor %}
-                </div>
+            <div id="flash-message">
+                {% for message in messages %}
+                <p style="color:red; font-size: 7px;">{{ message }}</p>
+                {% endfor %}
+            </div>
             {% endif %}
-        {% endwith %}
-    
-            
+            {% endwith %}
+
+
             <form method="post">
                 <div class="mb-0">
                     <label for="username" class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" required>
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email"
+                        required>
                 </div>
                 <div class="mb-0">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password" required>
+                    <input type="password" class="form-control" name="password" id="password"
+                        placeholder="Enter your password" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <div class="mb-0">
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </div>
                 <div class="mt-0">
                     You don't have an account?? <a href="{{url_for('create')}}">Create one here</a>
                 </div>
@@ -81,7 +96,8 @@
     </div>
 
 
-  
+
 
 </body>
+
 </html>
