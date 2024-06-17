@@ -7,18 +7,22 @@
       </div>
 
       {% if posts %} {% for post in posts %}
-
       <!-- This if statement checks whether i am the writer of the text by comparing the id of the poster and that of mine
          if i am the writer of the post then it will highlight the post with a green back ground-->
       {% if post[0] == id %}
       <div class="card mb-4 bg-success">
         <div class="card-body">
-          <h5 class="card-title">{{ post[2] }}</h5>
+          <h5 id="title" name="title" class="card-title">{{ post[2] }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">
             {{ post[4] }} by {{ post[1] }}
           </h6>
           <p class="card-text">{{ post[3] }}</p>
         </div>
+        <!-- Deleting a single post -->
+        <form action="{{url_for('delete_post')}}" method="post">
+          <input hidden type="hidden" name="id" value="{{post[5]}}" />
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
       </div>
       {% else %}
       <div class="card mb-4 bg-light">

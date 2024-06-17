@@ -48,7 +48,7 @@ def content():
     my_id = cursor.fetchall()
 
     cursor.execute("""
-        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted
+        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
         FROM posts
         INNER JOIN user_details ON posts.user_id = user_details.id
                    ORDER BY posts.date_posted DESC
@@ -158,6 +158,21 @@ def post():
 @app.route("/admin")
 def admin():
     return render_template("admin.html")
+
+
+@app.route("/delete_post", methods=['POST', 'GET'])
+def delete_post():
+    if request.method == "POST":
+        post_id = request.form.get("id")
+
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        cursor.execute("DELETE FROM posts WHERE id=%s", (post_id,))
+        connection.commit()
+
+        return redirect(url_for("content"))
+    return render_template("content.html")
 
 
 if __name__ == "__main__":
