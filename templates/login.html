@@ -37,13 +37,18 @@
           <div class="card bg-light card-responsive p-4">
             <div class="card-body text-center">
               <div class="py-0">
-                <img
-                  src="{{url_for('static', filename='images/image.png')}}"
-                  alt="Logo"
-                  height="37"
-                  width="37"
-                  class="img rounded-circle"
-                />
+                <a
+                  href="{{url_for('static', filename='images/logo.png')}}"
+                  class="brand"
+                >
+                  <img
+                    src="{{url_for('static', filename='images/logo.png')}}"
+                    alt="Logo"
+                    height="37"
+                    width="37"
+                    class="img rounded-circle"
+                  />
+                </a>
               </div>
               {% block heading %}
               <h6 class="py-0 text-muted">Login to your account</h6>
