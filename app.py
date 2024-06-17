@@ -5,6 +5,8 @@ import datetime
 
 app = Flask(__name__)
 
+app.config["SECRET_KEY"] = "secretkamande"
+
 
 @app.route("/profile")
 def profile():
