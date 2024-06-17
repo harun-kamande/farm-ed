@@ -1,0 +1,16 @@
+{% extends 'login.html'%} {%block username%}
+<div class="py-1 text-start">
+  <label for="password" class="form-label">Username</label>
+  <input
+    id="text"
+    name="name"
+    type="text"
+    class="form-control form-control-sm"
+    placeholder="Password"
+    required
+  />
+</div>
+{%endblock%} {%block heading%}
+<h4>Create account</h4>
+{%endblock%} {%block create%} you have an account
+<a href="{{url_for('login')}}">login</a> {%endblock%}
