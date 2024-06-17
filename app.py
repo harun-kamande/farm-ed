@@ -128,7 +128,7 @@ def create():
     cursor.close()
     connection.close()
 
-    return render_template("create.html")
+    return render_template("new_create.html")
 
 
 @app.route("/post", methods=["POST", "GET"])

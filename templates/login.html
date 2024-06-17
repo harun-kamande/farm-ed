@@ -19,72 +19,81 @@
       rel="stylesheet"
       href="{{url_for('static', filename='css/custom/auth.css')}}"
     />
+    <style>
+      body {
+        justify-content: center;
+      }
+    </style>
   </head>
 
-  <body>
-    <div class="container">
-      <div class="row justify-content-sm-center">
-        <div class="col col-sm-6">
-          <div class="wrapper">
-            <div class="auth-content">
-              <div class="card">
-                <div class="card-body text-center">
-                  <div class="py-0">
-                    <img
-                      src="{{url_for('static', filename='images/image.png')}}"
-                      alt="Logo"
-                      height="37"
-                      width="37"
-                      class="img rounded-circle"
-                    />
-                  </div>
-                  <h6 class="py-0 text-muted">Login to your account</h6>
-                  <form action="" method="post">
-                    <div class="py-0 text-start">
-                      {% with messages = get_flashed_messages() %} {% if
-                      messages %}
-                      <div id="flash-message">
-                        {% for message in messages %}
-                        <p style="color: red; font-size: 7px">{{ message }}</p>
-                        {% endfor %}
-                      </div>
-                      {% endif %} {% endwith %}
-                    </div>
-
-                    <div class="py-1 text-start">
-                      <label for="email" class="form-label">Email adress</label>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        class="form-control form-control-sm"
-                        placeholder="Enter Email"
-                        required
-                      />
-                    </div>
-                    <div class="py-1 text-start">
-                      <label for="password" class="form-label">Password</label>
-                      <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        class="form-control form-control-sm"
-                        placeholder="Password"
-                        required
-                      />
-                    </div>
-                    <div class="d-grid gap-2 pt-4">
-                      <button
-                        name="login"
-                        type="submit"
-                        class="btn btn-primary shadow-2 py-0"
-                      >
-                        Login
-                      </button>
-                    </div>
-                  </form>
-                </div>
+  <body
+    style="background-color: black"
+    id="body"
+    class="body justify-content-center"
+  >
+    <div class="container-fluid container-responsive mt-5">
+      <div class="row justify-content-center row-responsive" mt-5>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <div class="card bg-light card-responsive p-4">
+            <div class="card-body text-center">
+              <div class="py-0">
+                <img
+                  src="{{url_for('static', filename='images/image.png')}}"
+                  alt="Logo"
+                  height="37"
+                  width="37"
+                  class="img rounded-circle"
+                />
               </div>
+              {% block heading %}
+              <h6 class="py-0 text-muted">Login to your account</h6>
+              {% endblock %}
+              <form action="" method="post">
+                <div class="py-0 text-start">
+                  {% with messages = get_flashed_messages() %} {% if messages %}
+                  <div id="flash-message">
+                    {% for message in messages %}
+                    <p style="color: red; font-size: 7px">{{ message }}</p>
+                    {% endfor %}
+                  </div>
+                  {% endif %} {% endwith %}
+                </div>
+                <div class="py-1 text-start">
+                  <label for="email" class="form-label">Email address</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    class="form-control form-control-sm"
+                    placeholder="Enter Email"
+                    required
+                  />
+                </div>
+                {% block username %}{% endblock %}
+                <div class="py-1 text-start">
+                  <label for="password" class="form-label">Password</label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    class="form-control form-control-sm"
+                    placeholder="Password"
+                    required
+                  />
+                </div>
+                <div class="d-grid gap-2 pt-4">
+                  <button
+                    name="login"
+                    type="submit"
+                    class="btn btn-primary shadow-2 py-0"
+                  >
+                    Login
+                  </button>
+                  {%block create%} you dont have an account
+                  <a href="{{url_for('create')}}">Create</a>
+                  {%endblock%}
+                </div>
+              </form>
             </div>
           </div>
         </div>
