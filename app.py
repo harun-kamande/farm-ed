@@ -1,11 +1,9 @@
 from flask import Flask, render_template, redirect, request, session, url_for, flash, make_response
 from db_util import get_db_connection
 import datetime
-import time
+
+
 app = Flask(__name__)
-
-
-app.config["SECRET_KEY"] = "dont tell anyone"
 
 
 @app.route("/profile")
