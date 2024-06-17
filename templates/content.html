@@ -21,7 +21,13 @@
         <!-- Deleting a single post -->
         <form action="{{url_for('delete_post')}}" method="post">
           <input hidden type="hidden" name="id" value="{{post[5]}}" />
-          <button type="submit" class="btn btn-danger">Delete</button>
+          <button
+            type="submit"
+            onclick="deleted_alert()"
+            class="btn btn-danger"
+          >
+            Delete
+          </button>
         </form>
       </div>
       {% else %}

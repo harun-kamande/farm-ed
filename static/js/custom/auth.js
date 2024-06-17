@@ -17,3 +17,7 @@ $(document).ready(function(){
 function see_mypost(){
     document.getElementById("mypost").style.backgroundColor='green'
 }
+
+function deleted_alert(){
+    window.alert("Post was deleted successifully")
+}
