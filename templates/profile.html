@@ -1,19 +1,15 @@
-{% extends 'home.html'%}
-
-{% block content%}
-<div
-    class="card border-primary"
->
-    <img class="card-img-top justify-content-center" src="#" alt="profile photo" />
- 
-    <div class="card-body">
-        <h4 class="card-title">User name: {{data[0][0]}}</h4>
-        <p class="card-text">Date joined:{{data[0][1]}}</p>
-        <p class="card-text">Email:{{data[0][2]}}</p>
-    </div>
-    <button class="btn btn-outline-danger">
-    <a href="{{url_for('firstpage')}}" class="nav-link link-buttom-right">Logout</a>
-</button>
+{% extends 'home.html'%} {% block content%}
+<div class="card border-primary">
+  <div class="card-body">
+    <h4 class="card-title">User name: {{data[0][0]}}</h4>
+    <p class="card-text">Date joined:{{data[0][1]}}</p>
+    <p class="card-text">Email:{{data[0][2]}}</p>
+  </div>
+  <button class="btn btn-outline-danger">
+    <a href="{{url_for('firstpage')}}" class="nav-link link-buttom-right"
+      >Logout</a
+    >
+  </button>
 </div>
 
 {% endblock%}
