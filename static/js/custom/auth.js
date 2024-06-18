@@ -8,16 +8,29 @@ $(document).ready(function(){
 });
 
 
+
+function feedback_submision(){
+    post=document.getElementById("title").value;
+    feedback=document.getElementById("post").value;
+
+    if (feedback && post){
+        window.alert("Your feedback was submited successifully!!")
+    }
+
+}
+
+
 // function change_color(){
 //     setTimeout(function(){
 //         document.getElementById("flash-message").style.display='none';
 //     },4000)
 // }
 
-function see_mypost(){
-    document.getElementById("mypost").style.backgroundColor='green'
-}
+// function see_mypost(){
+//     document.getElementById("mypost").style.backgroundColor='green'
+// }
 
 function deleted_alert(){
     window.alert("Post was deleted successifully")
 }
+

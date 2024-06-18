@@ -64,10 +64,29 @@ def content():
 
 @app.route("/feedback", methods=['POST', 'GET'])
 def feedback():
+
+    if request.method == "POST":
+
+        feedback_title = request.form.get("title")
+        feedback = request.form.get("post")
+        my_email = request.cookies.get("id")
+
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            "SELECT id FROM user_details WHERE email=%s", (my_email,))
+        my_id = cursor.fetchall()
+
+        cursor.execute("INSERT INTO feedbacks(feedback_title,feedback,time_posted,user_id) VALUES (%s,%s,%s,%s)",
+                       (feedback_title, feedback, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), my_id[0][0]))
+        cursor.close()
+        connection.commit()
+        flash("Your feedback was sennt successifully")
+    else:
+        return render_template("feedback.html")
+
     return render_template("feedback.html")
-
-
-1
 
 
 # Point to be explored
