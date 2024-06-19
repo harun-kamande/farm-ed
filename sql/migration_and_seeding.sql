@@ -11,3 +11,5 @@ CREATE TABLE feedbacks(id INTEGER PRIMARY KEY AUTO_INCREMENT,feedback_title(200)
 
 
 CREATE TABLE IF NOT EXISTS admins(id INTEGER PRIMARY KEY AUTO_INCREMENT,user_id INTEGER, FOREIGN KEY(user_id) REFERENCES user_details(id));
+
+CREATE TABLE notifications(id INTEGER PRIMARY KEY AUTO_INCREMENT,message VARCHAR(300), writer VARCHAR(50), date_written VARCHAR(50), user_id INTEGER, FOREIGN KEY (user_id) REFERENCES user_details(user_id));

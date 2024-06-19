@@ -86,6 +86,7 @@
                     required
                   />
                 </div>
+                {%block action%}
                 <div class="d-grid gap-2 pt-4">
                   <button
                     name="login"
@@ -94,7 +95,7 @@
                   >
                     Login
                   </button>
-                  {%block create%} you dont have an account
+                  {%endblock%} {%block create%} you dont have an account
                   <a href="{{url_for('create')}}">Create</a>
                   {%endblock%}
                 </div>

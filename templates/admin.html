@@ -1,22 +1,27 @@
-{% extends 'home.html' %}
-
-{% block content %}
+{% extends 'home.html' %} {% block content %} {{feedback}}
 <div class="mb-3">
-    <p class="h content-justify-center">Send notification to the users</p>
-    
-    <form action="/" method="post">
-        <label for="notifications" class="form-label">Notification Message</label>
-        <textarea class="form-control" name="notifications" id="notifications" rows="3"></textarea>
-        <button type="submit" class="btn btn-primary btn-outline-success">Submit</button>
-    </form>
-</div>
-<div class="container">
-    <h3>Feedbacks</h3>
-    
-    <p>Username: _______</p>
-    <p>Date: _______</p>
-    <p>Content: _______</p>
-</div>
+  <p class="h content-justify-center">Send notification to the users</p>
 
+  <form action="/" method="post">
+    <label for="notifications" class="form-label">Notification Message</label>
+    <textarea
+      class="form-control"
+      name="notifications"
+      id="notifications"
+      rows="3"
+    ></textarea>
+    <button type="submit" class="btn btn-primary btn-outline-success">
+      Submit
+    </button>
+  </form>
+</div>
+<div class="container bg-primary">
+  <h3>Feedbacks</h3>
+
+  <p>Username: {{feedback[0][3]}}</p>
+  <p>Feedback Topic concern: {{feedback[0][0]}}</p>
+  <p>Date: {{feedback[0][2]}}</p>
+  <p>Content: {{feedback[0][1]}}</p>
+</div>
 
 {% endblock %}

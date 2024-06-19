@@ -174,11 +174,6 @@ def post():
     return render_template("post.html")
 
 
-@app.route("/admin")
-def admin():
-    return render_template("admin.html")
-
-
 @app.route("/delete_post", methods=['POST', 'GET'])
 def delete_post():
     if request.method == "POST":
@@ -192,6 +187,22 @@ def delete_post():
 
         return redirect(url_for("content"))
     return render_template("content.html")
+
+
+@app.route("/admin", methods=["POST", "GET"])
+def admin_page():
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT feedbacks.feedback_title, feedbacks.feedback, feedbacks.time_posted, user_details.user_name,user_details.email
+        FROM feedbacks
+        INNER JOIN user_details ON feedbacks.user_id = user_details.id
+                   
+    """)
+    feedback = cursor.fetchall()
+    return render_template("admin.html", feedback=feedback)
 
 
 if __name__ == "__main__":
