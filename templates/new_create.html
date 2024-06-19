@@ -13,4 +13,13 @@
 {%endblock%} {%block heading%}
 <h4>Create account</h4>
 {%endblock%} {%block create%} you have an account
-<a href="{{url_for('login')}}">login</a> {%endblock%}
+<a href="{{url_for('login')}}">Login</a>
+{%endblock%} {%block action%}
+
+<!-- Button inherited from the login page -->
+<div class="d-grid gap-2 pt-4">
+  <button name="login" type="submit" class="btn btn-primary shadow-2 py-0">
+    Create
+  </button>
+  {%endblock%}
+</div>
