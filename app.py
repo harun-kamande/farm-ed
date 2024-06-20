@@ -162,5 +162,10 @@ def delete_post():
     return render_template("content.html")
 
 
+# @app.route("/reply", methods=["POST", "GET"])
+# def reply():
+#     if request.method == "POST":
+
+
 if __name__ == "__main__":
     app.run(debug=True)

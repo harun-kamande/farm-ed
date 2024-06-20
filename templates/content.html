@@ -2,11 +2,28 @@
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-8">
-      <div class="bg-primary text-white text-center py-2 mb-4 rounded">
-        <h3>POSTS</h3>
+      <div class="bg-dark text-white text-center py-1 mb-4 rounded">
+        <nav>
+          <div class="nav">
+            <li class="nav-item">
+              <a href="#" class="nav-link">Dairy Farming</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">Coffee</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">Tea</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">Maize Farming</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">Others</a>
+            </li>
+          </div>
+        </nav>
       </div>
-
-      {% if posts %} {% for post in posts %}
+      {{posts}} {% if posts %} {% for post in posts %}
       <!-- This if statement checks whether i am the writer of the text by comparing the id of the poster and that of mine
          if i am the writer of the post then it will highlight the post with a green back ground-->
       {% if post[0] == id %}
@@ -38,7 +55,6 @@
             {{ post[4] }} by {{ post[1] }}
           </h6>
           <p class="card-text">{{ post[3] }}</p>
-          <button>Reply</button>
         </div>
       </div>
       {% endif %} {% endfor %} {% else %} {% endif %}
