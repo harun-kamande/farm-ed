@@ -20,17 +20,11 @@ function feedback_submision(){
 }
 
 
-// function change_color(){
-//     setTimeout(function(){
-//         document.getElementById("flash-message").style.display='none';
-//     },4000)
-// }
-
-// function see_mypost(){
-//     document.getElementById("mypost").style.backgroundColor='green'
-// }
 
 function deleted_alert(){
     window.alert("Post was deleted successifully")
 }
 
+function reply_function(){
+    document.getElementById("replyform").style.display='block'
+}

@@ -7,9 +7,18 @@ CREATE DATABASE IF NOT EXISTS farmed;CREATE TABLE IF NOT EXISTS user_details(id 
 CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY AUTO_INCREMENT,title VARCHAR(50),post VARCHAR(500),date_posted VARCHAR(50),user_id INTEGER, FOREIGN KEY(user_id) REFERENCES users_details(id));
 
 
-CREATE TABLE feedbacks(id INTEGER PRIMARY KEY AUTO_INCREMENT,feedback_title(200),feedback VARCHAR(300), time_posted VARCHAR(30),user_id INTEGER, FOREIGN KEY(user_id) REFERENCES user_details(id));
+CREATE TABLE IF NOT EXISTS reply(
+       id INTEGER PRIMARY KEY AUTO_INCREMENT,
+       reply VARCHAR(1000),
+       post_id INTEGER,
+       user_id INTEGER,
+       FOREIGN KEY (post_id) REFERENCES posts(id),
+       FOREIGN KEY (user_id) REFERENCES user_details(id))
 
 
-CREATE TABLE IF NOT EXISTS admins(id INTEGER PRIMARY KEY AUTO_INCREMENT,user_id INTEGER, FOREIGN KEY(user_id) REFERENCES user_details(id));
+CREATE TABLE IF NOT EXISTS categories(id INTEGER PRIMARY KEY AUTO_INCREMENT,post_category VARCHAR(34));
+INSERT INTO categories(post_category) VALUES('Dailyfarming'), ('Poultry'), ('Coffee'), ("Tea"),('MaizeFarming'),('Others');
 
-CREATE TABLE notifications(id INTEGER PRIMARY KEY AUTO_INCREMENT,message VARCHAR(300), writer VARCHAR(50), date_written VARCHAR(50), user_id INTEGER, FOREIGN KEY (user_id) REFERENCES user_details(user_id));
+ALTER TABLE posts
+ADD CONSTRAINT
+FOREIGN KEY (categories_id) REFERENCES categories(id);

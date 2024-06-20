@@ -62,33 +62,6 @@ def content():
     return render_template("content.html", posts=posts, id=my_id[0][0])
 
 
-@app.route("/feedback", methods=['POST', 'GET'])
-def feedback():
-
-    if request.method == "POST":
-
-        feedback_title = request.form.get("title")
-        feedback = request.form.get("post")
-        my_email = request.cookies.get("id")
-
-        connection = get_db_connection()
-        cursor = connection.cursor()
-
-        cursor.execute(
-            "SELECT id FROM user_details WHERE email=%s", (my_email,))
-        my_id = cursor.fetchall()
-
-        cursor.execute("INSERT INTO feedbacks(feedback_title,feedback,time_posted,user_id) VALUES (%s,%s,%s,%s)",
-                       (feedback_title, feedback, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), my_id[0][0]))
-        cursor.close()
-        connection.commit()
-        flash("Your feedback was sennt successifully")
-    else:
-        return render_template("feedback.html")
-
-    return render_template("feedback.html")
-
-
 # Point to be explored
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -189,20 +162,9 @@ def delete_post():
     return render_template("content.html")
 
 
-@app.route("/admin", methods=["POST", "GET"])
-def admin_page():
-
-    connection = get_db_connection()
-    cursor = connection.cursor()
-
-    cursor.execute("""
-        SELECT feedbacks.feedback_title, feedbacks.feedback, feedbacks.time_posted, user_details.user_name,user_details.email
-        FROM feedbacks
-        INNER JOIN user_details ON feedbacks.user_id = user_details.id
-                   
-    """)
-    feedback = cursor.fetchall()
-    return render_template("admin.html", feedback=feedback)
+# @app.route("/reply", methods=["POST", "GET"])
+# def reply():
+#     if request.method == "POST":
 
 
 if __name__ == "__main__":
