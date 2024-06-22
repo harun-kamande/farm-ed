@@ -129,6 +129,8 @@ def post():
         post_title = request.form.get("title")
         post_content = request.form.get("post")
 
+        category = request.form.get("category")
+
         connection = get_db_connection()
         cursor = connection.cursor()
 
@@ -138,8 +140,8 @@ def post():
 
         user_id = cursor.fetchall()
 
-        cursor.execute("INSERT INTO posts (title, post, date_posted, user_id) VALUES (%s, %s, %s, %s)", (
-            post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0]))
+        cursor.execute("INSERT INTO posts (title, post, date_posted, user_id,category) VALUES (%s, %s, %s, %s,%s)", (
+            post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0], category))
 
         connection.commit()
         return redirect(url_for('content'))
@@ -162,9 +164,129 @@ def delete_post():
     return render_template("content.html")
 
 
-# @app.route("/reply", methods=["POST", "GET"])
-# def reply():
-#     if request.method == "POST":
+@app.route("/dailyFarming", methods=["POST", "GET"])
+def dailyFarming():
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    my_email = request.cookies.get("id")
+    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
+    my_id = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
+    FROM posts
+    INNER JOIN user_details ON posts.user_id = user_details.id
+                   WHERE posts.category='Dairy_farming'
+                ORDER BY posts.date_posted DESC
+    """)
+
+    posts = cursor.fetchall()
+    connection.close()
+
+    return render_template("content.html", posts=posts, id=my_id[0][0])
+
+
+@app.route("/coffee")
+def coffee():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    my_email = request.cookies.get("id")
+    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
+    my_id = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
+    FROM posts
+    INNER JOIN user_details ON posts.user_id = user_details.id
+                   WHERE posts.category='coffee'
+                ORDER BY posts.date_posted DESC
+    """)
+
+    posts = cursor.fetchall()
+    connection.close()
+    if posts:
+        return render_template("content.html", posts=posts, id=my_id[0][0])
+    else:
+        return "No posts in this section "
+
+
+@app.route("/tea")
+def tea():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    my_email = request.cookies.get("id")
+    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
+    my_id = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
+    FROM posts
+    INNER JOIN user_details ON posts.user_id = user_details.id
+                   WHERE posts.category='tea'
+                ORDER BY posts.date_posted DESC
+    """)
+
+    posts = cursor.fetchall()
+    connection.close()
+
+    if posts:
+        return render_template("content.html", posts=posts, id=my_id[0][0])
+    else:
+        return "No posts in this section "
+
+
+@app.route("/maize_farming")
+def maize_farming():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    my_email = request.cookies.get("id")
+    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
+    my_id = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
+    FROM posts
+    INNER JOIN user_details ON posts.user_id = user_details.id
+                   WHERE posts.category='maize_farming'
+                ORDER BY posts.date_posted DESC
+    """)
+
+    posts = cursor.fetchall()
+    connection.close()
+    if posts:
+        return render_template("content.html", posts=posts, id=my_id[0][0])
+    else:
+        return "No posts in this section "
+
+
+@app.route("/others")
+def others():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    my_email = request.cookies.get("id")
+    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
+    my_id = cursor.fetchall()
+
+    cursor.execute("""
+    SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
+    FROM posts
+    INNER JOIN user_details ON posts.user_id = user_details.id
+                   WHERE posts.category='others'
+                ORDER BY posts.date_posted DESC
+    """)
+
+    posts = cursor.fetchall()
+    connection.close()
+    if posts:
+        return render_template("content.html", posts=posts, id=my_id[0][0])
+    else:
+        return "No posts in this section "
 
 
 if __name__ == "__main__":
