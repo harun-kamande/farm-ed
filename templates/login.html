@@ -2,15 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login - Farm-ed</title>
-
     <link
       rel="stylesheet"
       href="{{url_for('static', filename='css/vendor/bootstrap.min.css')}}"
@@ -21,22 +14,21 @@
     />
     <style>
       body {
-        justify-content: center;
+        background-color: black;
+      }
+
+      .brand img {
+        max-width: 100%;
       }
     </style>
   </head>
-
-  <body
-    style="background-color: black"
-    id="body"
-    class="body justify-content-center"
-  >
-    <div class="container-fluid container-responsive mt-5">
-      <div class="row justify-content-center row-responsive" mt-5>
-        <div class="col-sm-6 col-md-6 col-lg-6">
-          <div class="card bg-light card-responsive p-4">
+  <body id="body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+          <div class="card bg-light p-2">
             <div class="card-body text-center">
-              <div class="py-0">
+              <div class="mb-3">
                 <a
                   href="{{url_for('static', filename='images/logo.png')}}"
                   class="brand"
@@ -51,19 +43,19 @@
                 </a>
               </div>
               {% block heading %}
-              <h6 class="py-0 text-muted">Login to your account</h6>
+              <h6 class="mb-1 text-muted">Login to your account</h6>
               {% endblock %}
               <form action="" method="post">
-                <div class="py-0 text-start">
+                <div class="mb-1 text-start">
                   {% with messages = get_flashed_messages() %} {% if messages %}
                   <div id="flash-message">
                     {% for message in messages %}
-                    <p style="color: red; font-size: 7px">{{ message }}</p>
+                    <p style="color: red; font-size: 14px">{{ message }}</p>
                     {% endfor %}
                   </div>
                   {% endif %} {% endwith %}
                 </div>
-                <div class="py-1 text-start">
+                <div class="mb-1 text-start">
                   <label for="email" class="form-label">Email address</label>
                   <input
                     id="email"
@@ -75,7 +67,7 @@
                   />
                 </div>
                 {% block username %}{% endblock %}
-                <div class="py-1 text-start">
+                <div class="mb-1 text-start">
                   <label for="password" class="form-label">Password</label>
                   <input
                     id="password"
@@ -86,27 +78,29 @@
                     required
                   />
                 </div>
-                {%block action%}
-                <div class="d-grid gap-2 pt-4">
+                {% block action %}
+                <div class="d-grid gap-2 pt-1">
                   <button
                     name="login"
                     type="submit"
-                    class="btn btn-primary shadow-2 py-0"
+                    class="btn btn-primary shadow-sm"
                   >
                     Login
                   </button>
-                  {%endblock%} {%block create%} you dont have an account
-                  <a href="{{url_for('create')}}">Create</a>
-                  {%endblock%}
                 </div>
+                {% endblock %} {% block create %}
+                <div class="pt-1">
+                  Don't have an account?
+                  <a href="{{url_for('create')}}">Create</a>
+                </div>
+                {% endblock %}
               </form>
-            
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-    <script src="{{url_for('static', filename='js/vendor/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/vendor/bootstrap.bundle.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/vendor/jquery-3.7.1.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/custom/auth.js')}}"></script>
   </body>

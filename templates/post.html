@@ -1,17 +1,17 @@
 {% extends 'home.html' %} {% block content %}
-<div class="container mt-1 bg-black rounded p-3">
+<div class="container mt-3 bg-dark rounded p-3" style="max-width: 400px">
   <form action="#" method="post">
-    <div class="mb-1">
+    <div class="mb-3">
       <label for="title" class="form-label text-white">Post Title</label>
       <input
         type="text"
         id="title"
         name="title"
-        placeholder="Enter your post title here( optional)"
+        placeholder="Enter your post title here (optional)"
         class="form-control"
       />
     </div>
-    <div class="mb-1">
+    <div class="mb-3">
       <label for="post" class="form-label text-white">Post</label>
       <textarea
         class="form-control"
@@ -22,7 +22,75 @@
         required
       ></textarea>
     </div>
-    <input type="submit" value="Submit" class="btn btn-outline-warning" />
+    <div class="mb-3">
+      <label class="form-label text-white">Category</label>
+      <div>
+        <div class="form-check form-check-inline">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Dairy_farming"
+            id="Dairy_farming"
+            required
+          />
+          <label class="form-check-label text-white" for="Dairy_farming"
+            >Dairy Farming</label
+          >
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="coffee"
+            id="coffee"
+            required
+          />
+          <label class="form-check-label text-white" for="coffee"
+            >Coffee Farming</label
+          >
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="tea"
+            id="tea"
+            required
+          />
+          <label class="form-check-label text-white" for="tea"
+            >Tea Farming</label
+          >
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="Maize_farming"
+            id="Maize_farming"
+            required
+          />
+          <label class="form-check-label text-white" for="Maize_farming"
+            >Maize Farming</label
+          >
+        </div>
+        <div class="form-check form-check-inline">
+          <input
+            type="radio"
+            class="form-check-input"
+            name="category"
+            value="others"
+            id="Others"
+            required
+          />
+          <label class="form-check-label text-white" for="Others">Others</label>
+        </div>
+      </div>
+    </div>
+    <input type="submit" value="Submit" class="btn btn-outline-warning w-100" />
   </form>
 </div>
 {% endblock %}
