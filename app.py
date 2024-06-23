@@ -37,7 +37,7 @@ def home():
     return render_template("home.html")
 
 
-@app.route("/content")
+@app.route("/content", methods=["POST", "GET"])
 def content():
     connection = get_db_connection()
     cursor = connection.cursor()
@@ -48,7 +48,7 @@ def content():
     my_id = cursor.fetchall()
 
     cursor.execute("""
-        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
+        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id,posts.likes
         FROM posts
         INNER JOIN user_details ON posts.user_id = user_details.id
                    ORDER BY posts.date_posted DESC
@@ -140,8 +140,8 @@ def post():
 
         user_id = cursor.fetchall()
 
-        cursor.execute("INSERT INTO posts (title, post, date_posted, user_id,category) VALUES (%s, %s, %s, %s,%s)", (
-            post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0], category))
+        cursor.execute("INSERT INTO posts (title, post, date_posted, user_id,category,likes) VALUES (%s, %s, %s, %s,%s,%s)", (
+            post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0], category, 0))
 
         connection.commit()
         return redirect(url_for('content'))
@@ -279,6 +279,7 @@ def others():
     INNER JOIN user_details ON posts.user_id = user_details.id
                    WHERE posts.category='others'
                 ORDER BY posts.date_posted DESC
+                   
     """)
 
     posts = cursor.fetchall()
@@ -287,6 +288,21 @@ def others():
         return render_template("content.html", posts=posts, id=my_id[0][0])
     else:
         return "No posts in this section "
+
+
+@app.route("/like", methods=["POST"])
+def like():
+    post_id = request.form.get("post_id")
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        "UPDATE posts SET likes = likes + 1 WHERE id = %s", (post_id,))
+    connection.commit()
+    connection.close()
+
+    return redirect(url_for('content'))
 
 
 if __name__ == "__main__":

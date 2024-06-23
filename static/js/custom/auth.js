@@ -7,20 +7,6 @@ $(document).ready(function(){
     }, 4000);
 });
 
-
-
-function feedback_submision(){
-    post=document.getElementById("title").value;
-    feedback=document.getElementById("post").value;
-
-    if (feedback && post){
-        window.alert("Your feedback was submited successifully!!")
-    }
-
-}
-
-
-
 function deleted_alert(){
     window.alert("Post was deleted successifully")
 }
@@ -28,3 +14,7 @@ function deleted_alert(){
 function reply_function(){
     document.getElementById("replyform").style.display='block'
 }
+
+
+
+

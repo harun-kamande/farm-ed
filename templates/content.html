@@ -2,54 +2,62 @@
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-8">
-      <div class="bg-dark text-white text-center py-1 mb-4 rounded">
+      <!-- Navigation Bar -->
+      <div class="bg-dark text-white text-center py-2 mb-4 rounded">
         <nav>
-          <div class="nav">
+          <ul class="nav nav-pills justify-content-center">
             <li class="nav-item">
-              <a href="{{url_for('dailyFarming')}}" class="nav-link"
+              <a href="{{ url_for('dailyFarming') }}" class="nav-link"
                 >Dairy Farming</a
               >
             </li>
             <li class="nav-item">
-              <a href="{{url_for('coffee')}}" class="nav-link">Coffee</a>
+              <a href="{{ url_for('coffee') }}" class="nav-link">Coffee</a>
             </li>
             <li class="nav-item">
-              <a href="{{url_for('tea')}}" class="nav-link">Tea</a>
+              <a href="{{ url_for('tea') }}" class="nav-link">Tea</a>
             </li>
             <li class="nav-item">
-              <a href="{{url_for('maize_farming')}}" class="nav-link"
+              <a href="{{ url_for('maize_farming') }}" class="nav-link"
                 >Maize Farming</a
               >
             </li>
             <li class="nav-item">
-              <a href="{{url_for('others')}}" class="nav-link">Others</a>
+              <a href="{{ url_for('others') }}" class="nav-link">Others</a>
             </li>
-          </div>
+          </ul>
         </nav>
       </div>
-      {{posts}} {% if posts %} {% for post in posts %}
-      <!-- This if statement checks whether i am the writer of the text by comparing the id of the poster and that of mine
-         if i am the writer of the post then it will highlight the post with a green back ground-->
-      {% if post[0] == id %}
-      <div class="card mb-4 bg-success">
+
+      <!-- Posts Section -->
+      {% if posts %} {% for post in posts %} {% if post[0] == id %}
+      <div class="card mb-4 bg-success text-white">
         <div class="card-body">
-          <h5 id="title" name="title" class="card-title">{{ post[2] }}</h5>
+          <h5 class="card-title" id="title" name="title">{{ post[2] }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">
             {{ post[4] }} by {{ post[1] }}
           </h6>
           <p class="card-text">{{ post[3] }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <!-- Delete Post Form -->
+            <form action="{{ url_for('delete_post') }}" method="post">
+              <input type="hidden" name="id" value="{{ post[5] }}" />
+              <button
+                type="submit"
+                onclick="deleted_alert()"
+                class="btn btn-danger"
+              >
+                Delete
+              </button>
+            </form>
+            <div class="nav-item">Likes: {{ post[-1] }}</div>
+            <!-- Like Post Form -->
+            <form action="{{ url_for('like') }}" method="post">
+              <input type="hidden" name="post_id" value="{{ post[5] }}" />
+              <button type="submit" class="btn btn-primary">Like</button>
+            </form>
+          </div>
         </div>
-        <!-- Deleting a single post -->
-        <form action="{{url_for('delete_post')}}" method="post">
-          <input hidden type="hidden" name="id" value="{{post[5]}}" />
-          <button
-            type="submit"
-            onclick="deleted_alert()"
-            class="btn btn-danger"
-          >
-            Delete
-          </button>
-        </form>
       </div>
       {% else %}
       <div class="card mb-4 bg-light">
@@ -59,9 +67,24 @@
             {{ post[4] }} by {{ post[1] }}
           </h6>
           <p class="card-text">{{ post[3] }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="nav-item">Likes: {{ post[-1] }}</div>
+            <!-- Like Post Form -->
+            <form action="{{ url_for('like') }}" method="post">
+              <input
+                type="hidden"
+                id="post_id"
+                name="post_id"
+                value="{{ post[5] }}"
+              />
+              <button type="submit" class="btn btn-primary">Like</button>
+            </form>
+          </div>
         </div>
       </div>
-      {% endif %} {% endfor %} {% else %} {% endif %}
+      {% endif %} {% endfor %} {% else %}
+      <p>No posts available.</p>
+      {% endif %}
     </div>
   </div>
 </div>
