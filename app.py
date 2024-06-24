@@ -304,6 +304,10 @@ def like():
 
     return redirect(url_for('content'))
 
+# @app.route("/edit",methods=["POST","GET"])
+# def edit():
+#     if request.method=="POST":
+
 
 if __name__ == "__main__":
     app.run(debug=True)
