@@ -15,6 +15,10 @@ function reply_function(){
     document.getElementById("replyform").style.display='block'
 }
 
+function editing(){
+    document.getElementById("editpost").style.display="block";
+}
+
 
 
 
