@@ -16,7 +16,9 @@ function reply_function(){
 }
 
 function editing(){
-    document.getElementById("editpost").style.display="block";
+   value=document.getElementById("post_id").value
+    document.getElementById("edit").style.display="block";
+    alert (value)
 }
 
 
