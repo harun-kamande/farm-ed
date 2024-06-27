@@ -304,9 +304,26 @@ def like():
 
     return redirect(url_for('content'))
 
-# @app.route("/edit",methods=["POST","GET"])
-# def edit():
-#     if request.method=="POST":
+
+qqww
+
+
+@app.route("/edit", methods=["POST", "GET"])
+def edit():
+    if request.method == "POST":
+        post_id = request.form.get("post_id")
+        post_update = request.form.get("edit")
+
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        cursor.execute("""UPDATE posts SET post=%s
+                       WHERE id=%s""", (post_update, post_id))
+        cursor.close()
+        connection.commit()
+        return render_template("content.html")
+    else:
+        return render_template("content.html")
 
 
 if __name__ == "__main__":
