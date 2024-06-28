@@ -4,6 +4,19 @@ CREATE DATABASE IF NOT EXISTS farmed;CREATE TABLE IF NOT EXISTS user_details(id 
 
 
 
+
+-- CREATE TABLE posts(id INTEGER PRIMARY KEY AUTO_INCREMENT,
+--                     title VARCHAR(50),
+--                     post VARCHAR (400),
+--                     date_posted VARCHAR(35),
+--                     user_id INTEGER,
+--                     category VARCHAR(40),
+--                     likes INTEGER,
+--                     FOREIGN KEY (user_id)
+--                     REFERENCES user_details(id)
+--                     )
+
+
 CREATE TABLE IF NOT EXISTS posts(id INTEGER PRIMARY KEY AUTO_INCREMENT,title VARCHAR(50),post VARCHAR(500),date_posted VARCHAR(50),user_id INTEGER, FOREIGN KEY(user_id) REFERENCES users_details(id));
 ALTER TABLE posts
 ADD COLUMN category VARCHAR(40);
