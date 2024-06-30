@@ -30,70 +30,18 @@
       <!-- Posts Section -->
       {% if posts %}
       {% for post in posts %}
-      {% if post[0] == id %}
-      <div class="card mb-4 bg-success text-white">
-        <div class="card-body">
-          <h5 class="card-title" id="title" name="title">{{ post[2] }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ post[4] }} by {{ post[1] }}</h6>
-          <p class="card-text">{{ post[3] }}</p>
-          <div class="d-flex justify-content-center">
 
-            <!-- Delete Post Form -->
-            <form action="{{ url_for('delete_post') }}" method="post" class="mx-2">
-              <input type="hidden" name="id" value="{{ post[5] }}" />
-              <button type="submit" onclick="deleted_alert()" class="btn btn-danger">Delete</button>
-            </form>
-
-            <!-- Reply Section -->
-            <div class="mx-2">
-              <button class="toggle-btn btn btn-primary" onclick="toggleVisibility(this)" type="button">Reply</button>
-              <div style="display: none;" class="giving mt-2">
-                <form action="{{ url_for('reply') }}" method="post">
-                  <input type="text" id="post_id" name="post_id" value="{{ post[-2] }}" hidden>
-                  <textarea class="textarea bg-light rounded" name="reply" id="reply" placeholder="Input"></textarea>
-                  <input type="submit" class="btn btn-primary mt-2" value="Submit">
-                </form>
-              </div>
-            </div>
-
-            <!-- View Replies Section -->
-            <div class="mx-2">
-              <button class="toggle-btn btn btn-info" onclick="toggleVisibility(this)" type="button">View
-                Replies</button>
-              <div style="display: none;" class="giving mt-2">
-                <div class="container container-fluid bg-primary rounded">
-                  <!-- Replies content goes here -->
-                </div>
-              </div>
-            </div>
-
-            <!-- Edit Post Section -->
-            <div class="mx-2">
-              <button class="toggle-btn btn btn-warning" onclick="toggleVisibility(this)" type="button">Edit</button>
-              <div style="display: none;" class="giving mt-2">
-                <form action="{{ url_for('edit') }}" method="post">
-                  <input type="text" id="post_id" name="post_id" value="{{ post[-2] }}" hidden>
-                  <textarea class="textarea bg-light rounded" name="post_update" id="post_update"
-                    placeholder="Input">{{ post[3] }}</textarea>
-                  <input type="submit" class="btn btn-warning mt-2" value="Submit">
-                </form>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-      {% else %}
-      <div class="card mb-4 bg-light">
+      <!-- the below card will check if the post is your or not before deciding the color to display with -->
+      <div class="card mb-4 {% if post[0] == id %}bg-success text-white{% else %}bg-light{% endif %}">
         <div class="card-body">
           <h5 class="card-title">{{ post[2] }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{ post[4] }} by {{ post[1] }}</h6>
           <p class="card-text">{{ post[3] }}</p>
           <div class="d-flex justify-content-center">
-            <div class="nav-item mx-2">Likes: {{ post[-1] }}</div>
-
+            <!-- this displays the number of likes in a certain post -->
+            <p>likes {{post[-1]}}</p>
             <!-- Like Post Form -->
-            <form action="{{ url_for('like') }}" method="post" id="like" class="mx-2">
+            <form action="{{ url_for('like') }}" method="post" class="mx-2">
               <input type="hidden" id="post_id" name="post_id" value="{{ post[5] }}" />
               <button type="submit" class="btn btn-primary">Like</button>
             </form>
@@ -103,7 +51,7 @@
               <button class="toggle-btn btn btn-primary" onclick="toggleVisibility(this)" type="button">Reply</button>
               <div style="display: none;" class="giving mt-2">
                 <form action="{{ url_for('reply') }}" method="post">
-                  <input type="text" id="post_id" name="post_id" value="{{ post[-2] }}" hidden>
+                  <input type="text" id="post_id" name="post_id" value="{{ post[5] }}" hidden>
                   <textarea class="textarea bg-light rounded" name="reply" id="reply" placeholder="Input"></textarea>
                   <input type="submit" class="btn btn-primary mt-2" value="Submit">
                 </form>
@@ -115,16 +63,41 @@
               <button class="toggle-btn btn btn-info" onclick="toggleVisibility(this)" type="button">View
                 Replies</button>
               <div style="display: none;" class="giving mt-2">
-                <div class="container container-fluid bg-primary rounded">
-                  <!-- Replies content goes here -->
+                {% for reply in replies %}
+                {% if reply[2] == post[5] %}
+                <div class="container container-fluid bg-primary rounded mb-2">
+                  <p>Reply by {{ reply[3] }}</p>
+                  <hr>
+                  <p>{{ reply[1] }}</p>
                 </div>
+                {% endif %}
+                {% endfor %}
               </div>
             </div>
 
+            <!-- Edit Post Section -->
+            {% if post[0] == id %}
+            <div class="mx-2">
+              <button class="toggle-btn btn btn-warning" onclick="toggleVisibility(this)" type="button">Edit</button>
+              <div style="display: none;" class="giving mt-2">
+                <form action="{{ url_for('edit') }}" method="post">
+                  <input type="text" id="post_id" name="post_id" value="{{ post[5] }}" hidden>
+                  <textarea class="textarea bg-light rounded" name="post_update" id="post_update"
+                    placeholder="Input">{{ post[3] }}</textarea>
+                  <input type="submit" class="btn btn-warning mt-2" value="Submit">
+                </form>
+              </div>
+            </div>
+
+            <!-- Delete Post Form -->
+            <form action="{{ url_for('delete_post') }}" method="post" class="mx-2">
+              <input type="hidden" name="id" value="{{ post[5] }}" />
+              <button type="submit" onclick="deleted_alert()" class="btn btn-danger">Delete</button>
+            </form>
+            {% endif %}
           </div>
         </div>
       </div>
-      {% endif %}
       {% endfor %}
       {% else %}
       <p>No posts available.</p>
