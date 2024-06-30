@@ -48,18 +48,24 @@ def content():
     my_id = cursor.fetchall()
 
     cursor.execute("""
-        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id,posts.likes
+        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes
         FROM posts
         INNER JOIN user_details ON posts.user_id = user_details.id
-                   ORDER BY posts.date_posted DESC
+        ORDER BY posts.date_posted DESC
     """)
-
     posts = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
+        FROM reply
+        INNER JOIN user_details ON reply.user_id = user_details.id
+    """)
+    replies = cursor.fetchall()
 
     cursor.close()
     connection.close()
 
-    return render_template("content.html", posts=posts, id=my_id[0][0])
+    return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
 
 
 # Point to be explored
