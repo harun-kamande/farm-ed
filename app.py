@@ -323,5 +323,29 @@ def edit():
         return redirect(url_for('content'))
 
 
+@app.route("/reply", methods=["POST", "GET"])
+def reply():
+    if request.method == "POST":
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        user_email = request.cookies.get("id")
+        cursor.execute(
+            "SELECT id FROM user_details WHERE email=%s", (user_email,))
+        user_id = cursor.fetchall()
+
+        reply = request.form.get("reply")
+        post_id = request.form.get("post_id")
+
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute("""INSERT INTO reply(reply,post_id,user_id)
+                       VALUES(%s,%s,%s)""", (reply, post_id, user_id[0][0],))
+        connection.commit()
+        return redirect(url_for("content"))
+    else:
+        return redirect(url_for("content"))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
