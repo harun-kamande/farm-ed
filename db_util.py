@@ -9,7 +9,3 @@ def get_db_connection():
         port=3306,
         password='harunkamande',
     )
-
-
-def close_db_connection(connection):
-    connection.close()
