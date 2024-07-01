@@ -1,11 +1,17 @@
 {% extends 'home.html' %} {% block content %}
 <div class="container mt-3 bg-dark rounded p-3" style="max-width: 400px">
-  <form action="#" method="post">
+  <form action="#" method="post" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="title" class="form-label text-white">Post Title</label>
       <input type="text" id="title" name="title" placeholder="Enter your post title here" class="form-control"
         required />
     </div>
+
+    <div class="mb-3">
+      <label for="title" class="form-label text-white">Select a photo or a video (optional)</label>
+      <input type="file" id="myfile" name="myfile" class="form-control" />
+    </div>
+
     <div class="mb-3">
       <label for="post" class="form-label text-white">Post</label>
       <textarea class="form-control" name="post" id="post" rows="3" placeholder="Write your post content here"

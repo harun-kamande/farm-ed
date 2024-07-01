@@ -31,15 +31,28 @@
       {% if posts %}
       {% for post in posts %}
 
-      <!-- the below card will check if the post is your or not before deciding the color to display with -->
+      <!-- the below card will check if the post is yours or not before deciding the color to display with -->
       <div class="card mb-4 {% if post[0] == id %}bg-success text-white{% else %}bg-light{% endif %}">
         <div class="card-body">
           <h5 class="card-title">{{ post[2] }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{ post[4] }} by {{ post[1] }}</h6>
           <p class="card-text">{{ post[3] }}</p>
+          {% if post[7] %}
+          <div>
+            {% if post[7].endswith('.jpg') or post[7].endswith('.png') %}
+            <img src="{{ url_for('static', filename='uploads/' ~ post[7]) }}" class="img-fluid" alt="Image"
+              height="300px" width="300px">
+            {% elif post[7].endswith('.mp4') %}
+            <video controls height="300px" width="300px" loop autoplay>
+              <source src="{{ url_for('static', filename='uploads/' ~ post[7]) }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            {% endif %}
+          </div>
+          {% endif %}
           <div class="d-flex justify-content-center">
             <!-- this displays the number of likes in a certain post -->
-            <p>likes {{post[-1]}}</p>
+            <p>Likes: {{ post[6] }}</p>
             <!-- Like Post Form -->
             <form action="{{ url_for('like') }}" method="post" class="mx-2">
               <input type="hidden" id="post_id" name="post_id" value="{{ post[5] }}" />
@@ -105,4 +118,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}

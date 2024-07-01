@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request, session, url_for, flash, make_response
 from db_util import get_db_connection
 import datetime
+import os
 
 
 app = Flask(__name__)
@@ -42,16 +43,15 @@ def content():
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    # selecting user id
     my_email = request.cookies.get("id")
     cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
     my_id = cursor.fetchall()
 
     cursor.execute("""
-        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes
+        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
         FROM posts
         INNER JOIN user_details ON posts.user_id = user_details.id
-        ORDER BY posts.date_posted DESC
+        ORDER BY posts.likes DESC
     """)
     posts = cursor.fetchall()
 
@@ -137,37 +137,60 @@ def post():
 
         category = request.form.get("category")
 
+        myfile = request.files.get("myfile")
+
         connection = get_db_connection()
-        cursor = connection.cursor()
 
-        email = request.cookies.get("id")
+        if myfile:
+            filename = myfile.filename
+            upload_folder = 'static/uploads'
+            os.makedirs(upload_folder, exist_ok=True)
+            file_path = os.path.join(upload_folder, myfile.filename)
+            myfile.save(file_path)
 
-        cursor.execute("SELECT id FROM user_details WHERE email=%s", (email,))
+            connection = get_db_connection()
+            cursor = connection.cursor()
 
-        user_id = cursor.fetchall()
+            email = request.cookies.get("id")
 
-        cursor.execute("INSERT INTO posts (title, post, date_posted, user_id,category,likes) VALUES (%s, %s, %s, %s,%s,%s)", (
-            post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0], category, 0))
+            cursor.execute(
+                "SELECT id FROM user_details WHERE email=%s", (email,))
 
-        connection.commit()
-        return redirect(url_for('content'))
+            user_id = cursor.fetchall()
+
+            cursor.execute("INSERT INTO posts (title, post, date_posted, user_id,category,likes,myfile) VALUES (%s, %s, %s, %s,%s,%s,%s)", (
+                post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0], category, 0, filename))
+            connection.commit()
+            return render_template("post.html")
+        else:
+            cursor = connection.cursor()
+            email = request.cookies.get("id")
+            cursor.execute(
+                "SELECT id FROM user_details WHERE email=%s", (email,))
+            user_id = cursor.fetchall()
+
+            cursor.execute("INSERT INTO posts (title, post, date_posted, user_id,category,likes) VALUES (%s, %s, %s, %s,%s,%s)", (
+                post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0], category, 0))
+            connection.commit()
+            return render_template("post.html")
 
     return render_template("post.html")
 
 
-@app.route("/delete_post", methods=['POST', 'GET'])
+@app.route("/delete_post", methods=["POST"])
 def delete_post():
-    if request.method == "POST":
-        post_id = request.form.get("id")
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    post_id = request.form['id']
 
-        connection = get_db_connection()
-        cursor = connection.cursor()
+    cursor.execute("DELETE FROM reply WHERE post_id=%s", (post_id,))
+    cursor.execute("DELETE FROM posts WHERE id = %s", (post_id,))
+    connection.commit()
 
-        cursor.execute("DELETE FROM posts WHERE id=%s", (post_id,))
-        connection.commit()
+    cursor.close()
+    connection.close()
 
-        return redirect(url_for("content"))
-    return render_template("content.html")
+    return redirect(url_for('content'))
 
 
 @app.route("/dailyFarming", methods=["POST", "GET"])
@@ -179,13 +202,12 @@ def dailyFarming():
     my_email = request.cookies.get("id")
     cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
     my_id = cursor.fetchall()
-
     cursor.execute("""
-    SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
-    FROM posts
-    INNER JOIN user_details ON posts.user_id = user_details.id
+        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
+        FROM posts
+        INNER JOIN user_details ON posts.user_id = user_details.id
                    WHERE posts.category='Dairy_farming'
-                ORDER BY posts.date_posted DESC
+        ORDER BY posts.likes DESC
     """)
 
     posts = cursor.fetchall()
@@ -204,13 +226,12 @@ def coffee():
     my_id = cursor.fetchall()
 
     cursor.execute("""
-    SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
-    FROM posts
-    INNER JOIN user_details ON posts.user_id = user_details.id
+        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
+        FROM posts
+        INNER JOIN user_details ON posts.user_id = user_details.id
                    WHERE posts.category='coffee'
-                ORDER BY posts.date_posted DESC
+        ORDER BY posts.likes DESC
     """)
-
     posts = cursor.fetchall()
     connection.close()
     if posts:
@@ -229,11 +250,11 @@ def tea():
     my_id = cursor.fetchall()
 
     cursor.execute("""
-    SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
-    FROM posts
-    INNER JOIN user_details ON posts.user_id = user_details.id
+        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
+        FROM posts
+        INNER JOIN user_details ON posts.user_id = user_details.id
                    WHERE posts.category='tea'
-                ORDER BY posts.date_posted DESC
+        ORDER BY posts.likes DESC
     """)
 
     posts = cursor.fetchall()
@@ -255,11 +276,11 @@ def maize_farming():
     my_id = cursor.fetchall()
 
     cursor.execute("""
-    SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
-    FROM posts
-    INNER JOIN user_details ON posts.user_id = user_details.id
-                   WHERE posts.category='maize_farming'
-                ORDER BY posts.date_posted DESC
+        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
+        FROM posts
+        INNER JOIN user_details ON posts.user_id = user_details.id
+                   WHERE posts.category='Maize_farming'
+        ORDER BY posts.likes DESC
     """)
 
     posts = cursor.fetchall()
@@ -280,12 +301,11 @@ def others():
     my_id = cursor.fetchall()
 
     cursor.execute("""
-    SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted,posts.id
-    FROM posts
-    INNER JOIN user_details ON posts.user_id = user_details.id
+        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
+        FROM posts
+        INNER JOIN user_details ON posts.user_id = user_details.id
                    WHERE posts.category='others'
-                ORDER BY posts.date_posted DESC
-                   
+        ORDER BY posts.likes DESC
     """)
 
     posts = cursor.fetchall()
