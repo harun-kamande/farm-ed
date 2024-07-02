@@ -68,7 +68,6 @@ def content():
     return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
 
 
-# Point to be explored
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
@@ -211,9 +210,17 @@ def dailyFarming():
     """)
 
     posts = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
+        FROM reply
+        INNER JOIN user_details ON reply.user_id = user_details.id
+    """)
+    replies = cursor.fetchall()
+
     connection.close()
 
-    return render_template("content.html", posts=posts, id=my_id[0][0])
+    return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
 
 
 @app.route("/coffee")
@@ -233,9 +240,18 @@ def coffee():
         ORDER BY posts.likes DESC
     """)
     posts = cursor.fetchall()
+    cursor.execute("""
+        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
+        FROM reply
+        INNER JOIN user_details ON reply.user_id = user_details.id
+    """)
+    replies = cursor.fetchall()
+
+    cursor.close()
     connection.close()
+
     if posts:
-        return render_template("content.html", posts=posts, id=my_id[0][0])
+        return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
     else:
         return "No posts in this section "
 
@@ -258,10 +274,17 @@ def tea():
     """)
 
     posts = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
+        FROM reply
+        INNER JOIN user_details ON reply.user_id = user_details.id
+    """)
+    replies = cursor.fetchall()
     connection.close()
 
     if posts:
-        return render_template("content.html", posts=posts, id=my_id[0][0])
+        return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
     else:
         return "No posts in this section "
 
@@ -284,9 +307,16 @@ def maize_farming():
     """)
 
     posts = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
+        FROM reply
+        INNER JOIN user_details ON reply.user_id = user_details.id
+    """)
+    replies = cursor.fetchall()
     connection.close()
     if posts:
-        return render_template("content.html", posts=posts, id=my_id[0][0])
+        return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
     else:
         return "No posts in this section "
 
@@ -309,9 +339,16 @@ def others():
     """)
 
     posts = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
+        FROM reply
+        INNER JOIN user_details ON reply.user_id = user_details.id
+    """)
+    replies = cursor.fetchall()
     connection.close()
     if posts:
-        return render_template("content.html", posts=posts, id=my_id[0][0])
+        return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
     else:
         return "No posts in this section "
 
