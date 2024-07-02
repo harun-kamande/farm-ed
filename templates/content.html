@@ -8,19 +8,19 @@
       <div class="bg-dark text-white text-center py-2 mb-4 rounded">
         <nav>
           <ul class="nav nav-pills justify-content-center">
-            <li class="nav-item">
+            <li class="nav-item" style="font-size: x-small;">
               <a href="{{ url_for('dailyFarming') }}" class="nav-link">Dairy Farming</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="font-size: x-small;">
               <a href="{{ url_for('coffee') }}" class="nav-link">Coffee</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="font-size: x-small;">
               <a href="{{ url_for('tea') }}" class="nav-link">Tea</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="font-size: x-small;">
               <a href="{{ url_for('maize_farming') }}" class="nav-link">Maize Farming</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="font-size: x-small;">
               <a href="{{ url_for('others') }}" class="nav-link">Others</a>
             </li>
           </ul>
@@ -42,7 +42,7 @@
             <img src="{{ url_for('static', filename='uploads/' ~ post[7]) }}" class="img-fluid" style="max-width: 100%;"
               alt="Image">
             {% elif post[7].endswith('.mp4') %}
-            <video controls class="img-fluid" loop autoplay>
+            <video controls class="img-fluid" loop>
               <source src="{{ url_for('static', filename='uploads/' ~ post[7]) }}" type="video/mp4">
 
             </video>
