@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, session, url_for, flash, make_response
 from db_util import get_db_connection
+from jinja2 import UndefinedError
 import datetime
 import os
 
@@ -408,6 +409,29 @@ def reply():
         return redirect(url_for("content"))
     else:
         return redirect(url_for("content"))
+
+
+'''
+This errorHandler catching an error where cookie is empty or has expired
+Ive used cookie to store the email of the user,so ill need to fetch it incase i need to clarify who posted 
+the content
+'''
+
+
+@app.errorhandler(IndexError)
+def handle_index_error(error):
+    return render_template('login'), 500
+
+
+'''
+catching an error where cookie is empty
+This file is doing the same task,
+'''
+
+
+@app.errorhandler(UndefinedError)
+def go_back_home(error):
+    return redirect(url_for('login')), 500
 
 
 if __name__ == "__main__":
