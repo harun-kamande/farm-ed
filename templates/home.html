@@ -9,39 +9,36 @@
 </head>
 <style>
   body {
-    background-color: rgb(36, 33, 33);
+    background-color: white;
     color: white;
   }
 </style>
 <div class="nav justify-content-center bg-black nav-fluid nav-responsive">
   <ul class="nav">
     <li class="nav-item">
-      <button class="btn btn-outline-success " style="font-size: x-small;">
+      <button class="btn btn-outline-light rounded-corner" style="font-size: large;">
         <a class="navbar-brand outline-primary" href="{{url_for('static', filename='images/logo.png')}}">Farme-d</a>
       </button>
     </li>
-    <li class="nav-item" style="font-size: x-small;">
-      <a href="{{url_for('home')}}" class="nav-link">Home</a>
+    <li class="nav-item" style="font-size: large;">
+      <a href="{{url_for('home')}}" class="nav-link" style="color: white;">Home</a>
     </li>
-    <li class="nav-item" style="font-size: x-small;">
-      <a href="{{url_for('post')}}" class="nav-link">Post</a>
+    <li class="nav-item" style="font-size: large;">
+      <a href="{{url_for('post')}}" class="nav-link" style="color: white;">Post</a>
     </li>
-    <li class="nav-item" style="font-size: x-small;">
-      <a href="{{url_for('content')}}" class="nav-link">Content</a>
+    <li class="nav-item" style="font-size: large;">
+      <a href="{{url_for('content')}}" class="nav-link" style="color: white;">Content</a>
     </li>
 
-    <li class="nav-item" style="font-size: x-small;">
-      <a href="{{url_for('profile')}}" class="nav-link">profile</a>
-    </li>
-    <li class="nav-item" style="font-size: x-small;">
-      <a href="{{url_for('profile')}}" class="nav-link">notifications</a>
+    <li class="nav-item" style="font-size: large;">
+      <a href="{{url_for('profile')}}" class="nav-link" style="color: white;">Profile</a>
     </li>
   </ul>
 </div>
 
 <body id="body">
   {% block content %}
-  <div class="container-fluid d-flex justify-content-center align-items-center text-white" style="height: 100vh">
+  <div class="container-fluid d-flex justify-content-center align-items-center text-black" style="height: 100vh">
     <h1 class="text-center">WELCOME TO FARM-ED NETWORKING PLATFORM</h1>
 
   </div>

@@ -20,6 +20,7 @@ function toggleVisibility(button) {
         givingDiv.style.display = "block";
     } else {
         givingDiv.style.display = "none";
+        
     }
     alert(document.getElementById())
 }
