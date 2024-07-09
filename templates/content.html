@@ -8,20 +8,22 @@
       <div class="bg-dark text-white text-center py-2 mb-4 rounded">
         <nav>
           <ul class="nav nav-pills justify-content-center">
-            <li class="nav-item">
-              <a href="{{ url_for('dailyFarming') }}" class="nav-link">Dairy Farming</a>
+            <li class="nav-item" style="font-size: x-small;">
+              <a href="{{ url_for('dailyFarming') }}" class="nav-link" style="font-size: large; color:white">Dairy
+                Farming</a>
             </li>
-            <li class="nav-item">
-              <a href="{{ url_for('coffee') }}" class="nav-link">Coffee</a>
+            <li class="nav-item" style="font-size: x-small;">
+              <a href="{{ url_for('coffee') }}" class="nav-link" style="font-size: large; color:white">Coffee</a>
             </li>
-            <li class="nav-item">
-              <a href="{{ url_for('tea') }}" class="nav-link">Tea</a>
+            <li class="nav-item" style="font-size: x-small;">
+              <a href="{{ url_for('tea') }}" class="nav-link" style="font-size: large; color:white">Tea</a>
             </li>
-            <li class="nav-item">
-              <a href="{{ url_for('maize_farming') }}" class="nav-link">Maize Farming</a>
+            <li class="nav-item" style="font-size: large;">
+              <a href="{{ url_for('maize_farming') }}" class="nav-link" style="font-size: large; color:white">Maize
+                Farming</a>
             </li>
-            <li class="nav-item">
-              <a href="{{ url_for('others') }}" class="nav-link">Others</a>
+            <li class="nav-item" style="font-size: x-small;">
+              <a href="{{ url_for('others') }}" class="nav-link" style="font-size: large; color:white">Others</a>
             </li>
           </ul>
         </nav>
@@ -30,7 +32,7 @@
       <!-- Posts Section -->
       {% if posts %}
       {% for post in posts %}
-      <div class="card mb-4 {% if post[0] == id %}bg-success text-white{% else %}bg-light{% endif %}">
+      <div class="card mb-4 {% if post[0] == id %}bg-light text-white{% else %}bg-light{% endif %}">
         <div class="card-body">
           <h5 class="card-title">{{ post[2] }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{ post[4] }} by {{ post[1] }}</h6>
@@ -42,7 +44,7 @@
             <img src="{{ url_for('static', filename='uploads/' ~ post[7]) }}" class="img-fluid" style="max-width: 100%;"
               alt="Image">
             {% elif post[7].endswith('.mp4') %}
-            <video controls class="img-fluid" loop autoplay>
+            <video controls class="img-fluid" loop>
               <source src="{{ url_for('static', filename='uploads/' ~ post[7]) }}" type="video/mp4">
 
             </video>
@@ -72,7 +74,8 @@
 
             <!-- View Replies Section -->
             <div class="mx-1">
-              <button class="toggle-btn btn btn-info btn-sm" onclick="toggleVisibility(this)" type="button">View
+              <button class="toggle-btn btn btn-info btn-sm" onclick="toggleVisibility(this)" type="button"
+                id="replies">View
                 Replies</button>
               <div style="display: none;" class="giving mt-2">
                 {% for reply in replies %}

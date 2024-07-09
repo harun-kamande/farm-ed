@@ -18,10 +18,12 @@ function toggleVisibility(button) {
     let givingDiv = button.nextElementSibling;
     if (givingDiv.style.display === "none" || givingDiv.style.display === "") {
         givingDiv.style.display = "block";
+        button.innerHTML = "Hide Replies";
     } else {
         givingDiv.style.display = "none";
+        button.innerHTML = "View Replies";
     }
-    alert(document.getElementById())
+    
 }
 
 document.addEventListener("DOMContentLoaded", function() {
