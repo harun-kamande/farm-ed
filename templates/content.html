@@ -93,7 +93,7 @@
             <!-- Edit Post Section -->
             {% if post[0] == id %}
             <div class="mx-1">
-              <button class="toggle-btn btn btn-warning btn-sm" onclick="toggleVisibility(this)"
+              <button class="toggle-btn btn btn-warning btn-sm" onclick="toggle_editVisibility(this)"
                 type="button">Edit</button>
               <div style="display: none;" class="giving mt-2">
                 <form action="{{ url_for('edit') }}" method="post">

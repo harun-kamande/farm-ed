@@ -3,7 +3,7 @@ from db_util import get_db_connection
 from jinja2 import UndefinedError, TemplateNotFound
 import datetime
 import os
-
+import hashlib
 
 app = Flask(__name__)
 
@@ -77,11 +77,12 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
+        hashedpassword = hashlib.sha256(password.encode()).hexdigest()
 
         connection = get_db_connection()
         cursor = connection.cursor()
         cursor.execute(
-            "SELECT email, user_password FROM user_details WHERE email=%s AND user_password=%s", (email, password))
+            "SELECT email, user_password FROM user_details WHERE email=%s AND user_password=%s", (email, hashedpassword))
 
         user = cursor.fetchone()
 
@@ -108,6 +109,7 @@ def create():
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
+        hashedpassword = hashlib.sha256(password.encode()).hexdigest()
 
         cursor.execute(
             "SELECT email FROM user_details WHERE email = %s", (email,))
@@ -118,7 +120,7 @@ def create():
         else:
             cursor.execute(
                 "INSERT INTO user_details (user_name, email, user_password,date_joined) VALUES (%s, %s, %s,%s)",
-                (username, email, password,
+                (username, email, hashedpassword,
                  datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"))
             )
             flash("Account created successfully!")
