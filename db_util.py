@@ -1,4 +1,5 @@
 import mysql.connector
+import os
 
 
 def get_db_connection():
@@ -7,5 +8,6 @@ def get_db_connection():
         user='root',
         database='farmed',
         port=3306,
-        password='harunkamande',
+        # Accessing my db password from my Os environment variable
+        password=os.environ.get('mydb'),
     )

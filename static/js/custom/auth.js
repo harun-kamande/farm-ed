@@ -38,6 +38,18 @@ function togglereplyVisibility(button) {
     
 }
 
+function toggle_editVisibility(button) {
+    let givingDiv = button.nextElementSibling;
+    if (givingDiv.style.display === "none" || givingDiv.style.display === "") {
+        givingDiv.style.display = "block";
+        button.innerHTML = "Hide Edit";
+    } else {
+        givingDiv.style.display = "none";
+        button.innerHTML = "Edit";
+    }
+    
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     let buttons = document.querySelectorAll("button.toggle-btn");
     buttons.forEach(function(button) {

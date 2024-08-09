@@ -34,9 +34,10 @@
       {% for post in posts %}
       <div class="card mb-4 {% if post[0] == id %}bg-light text-white{% else %}bg-light{% endif %}">
         <div class="card-body">
-          <h5 class="card-title">{{ post[2] }}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">{{ post[4] }} by {{ post[1] }}</h6>
-          <p class="card-text">{{ post[3] }}</p>
+          <h5 class="card-title" style="font-size: 14px; color:black;">{{ post[2] }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted" style="font-size: 14px; color:black;">{{ post[4] }} by {{ post[1] }}
+          </h6>
+          <p class="card-text" style="font-size: 14px; color:black;">{{ post[3] }}</p>
           {% if post[7] %}
           <div class="media-container">
             {% if post[7].endswith('.jpeg') or post[7].endswith('.png') or post[7].endswith('.jpg') or
@@ -92,7 +93,7 @@
             <!-- Edit Post Section -->
             {% if post[0] == id %}
             <div class="mx-1">
-              <button class="toggle-btn btn btn-warning btn-sm" onclick="toggleVisibility(this)"
+              <button class="toggle-btn btn btn-warning btn-sm" onclick="toggle_editVisibility(this)"
                 type="button">Edit</button>
               <div style="display: none;" class="giving mt-2">
                 <form action="{{ url_for('edit') }}" method="post">

@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect, request, session, url_for, flash, make_response
 from db_util import get_db_connection
-from jinja2 import UndefinedError
+from jinja2 import UndefinedError, TemplateNotFound
 import datetime
 import os
-
+import hashlib
 
 app = Flask(__name__)
 
@@ -47,26 +47,29 @@ def content():
     my_email = request.cookies.get("id")
     cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
     my_id = cursor.fetchall()
+    if my_id:
 
-    cursor.execute("""
-        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
-        FROM posts
-        INNER JOIN user_details ON posts.user_id = user_details.id
-        ORDER BY posts.likes DESC
-    """)
-    posts = cursor.fetchall()
+        cursor.execute("""
+            SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
+            FROM posts
+            INNER JOIN user_details ON posts.user_id = user_details.id
+            ORDER BY posts.likes DESC
+        """)
+        posts = cursor.fetchall()
 
-    cursor.execute("""
-        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
-        FROM reply
-        INNER JOIN user_details ON reply.user_id = user_details.id
-    """)
-    replies = cursor.fetchall()
+        cursor.execute("""
+            SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
+            FROM reply
+            INNER JOIN user_details ON reply.user_id = user_details.id
+        """)
+        replies = cursor.fetchall()
 
-    cursor.close()
-    connection.close()
+        cursor.close()
+        connection.close()
 
-    return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
+        return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
+    else:
+        return redirect(url_for("login"))
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -74,11 +77,12 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
+        hashedpassword = hashlib.sha256(password.encode()).hexdigest()
 
         connection = get_db_connection()
         cursor = connection.cursor()
         cursor.execute(
-            "SELECT email, user_password FROM user_details WHERE email=%s AND user_password=%s", (email, password))
+            "SELECT email, user_password FROM user_details WHERE email=%s AND user_password=%s", (email, hashedpassword))
 
         user = cursor.fetchone()
 
@@ -105,6 +109,7 @@ def create():
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
+        hashedpassword = hashlib.sha256(password.encode()).hexdigest()
 
         cursor.execute(
             "SELECT email FROM user_details WHERE email = %s", (email,))
@@ -115,7 +120,7 @@ def create():
         else:
             cursor.execute(
                 "INSERT INTO user_details (user_name, email, user_password,date_joined) VALUES (%s, %s, %s,%s)",
-                (username, email, password,
+                (username, email, hashedpassword,
                  datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"))
             )
             flash("Account created successfully!")
@@ -432,6 +437,11 @@ This file is doing the same task,
 @app.errorhandler(UndefinedError)
 def go_back_home(error):
     return redirect(url_for('login')), 500
+
+
+@app.errorhandler(TemplateNotFound)
+def go_home(error):
+    return redirect(render_template("home.html")), 500
 
 
 if __name__ == "__main__":
