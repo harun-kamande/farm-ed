@@ -4,6 +4,9 @@ from jinja2 import UndefinedError, TemplateNotFound
 import datetime
 import os
 import hashlib
+from models import User, session, Session, Posts, Reply
+from sqlalchemy import Column, String, ForeignKey, Integer, create_engine, desc
+
 
 app = Flask(__name__)
 
@@ -13,12 +16,14 @@ app.config["SECRET_KEY"] = "secretkamande"
 @app.route("/profile")
 def profile():
     email = request.cookies.get("id")
-    connection = get_db_connection()
-    cursor = connection.cursor()
-    cursor.execute(
-        """SELECT user_name,date_joined,email FROM user_details WHERE email=%s""", (email,))
-    data = cursor.fetchall()
-    return render_template("profile.html", data=data)
+    if not email:
+        # Handle the case where the email cookie is missing
+        return redirect(url_for('login'))
+
+    myprofile = session.query(User.user_name, User.date_joined, User.email).filter(
+        User.email == email).all()
+
+    return render_template("profile.html", data=myprofile)
 
 
 @app.route("/firstpage", methods=["POST", "GET"])
@@ -41,31 +46,16 @@ def home():
 
 @app.route("/content", methods=["POST", "GET"])
 def content():
-    connection = get_db_connection()
-    cursor = connection.cursor()
 
     my_email = request.cookies.get("id")
-    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
-    my_id = cursor.fetchall()
+    getMyid = session.query(User).filter(User.email == my_email).one_or_none()
+    my_id = getMyid.email
     if my_id:
+        posts = session.query(User.id, User.user_name, Posts.title, Posts.post, Posts.date_posted, Posts.id,
+                              Posts.likes, Posts.myfile).join(User, User.id == Posts.user_id).order_by(desc(Posts.likes)).all()
 
-        cursor.execute("""
-            SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
-            FROM posts
-            INNER JOIN user_details ON posts.user_id = user_details.id
-            ORDER BY posts.likes DESC
-        """)
-        posts = cursor.fetchall()
-
-        cursor.execute("""
-            SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
-            FROM reply
-            INNER JOIN user_details ON reply.user_id = user_details.id
-        """)
-        replies = cursor.fetchall()
-
-        cursor.close()
-        connection.close()
+        replies = session.query(Reply.id, Reply.reply, Reply.post_id, User.user_name).join(
+            User, User.id == Reply.user_id).all()
 
         return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
     else:
@@ -79,17 +69,9 @@ def login():
         password = request.form.get("password")
         hashedpassword = hashlib.sha256(password.encode()).hexdigest()
 
-        connection = get_db_connection()
-        cursor = connection.cursor()
-        cursor.execute(
-            "SELECT email, user_password FROM user_details WHERE email=%s AND user_password=%s", (email, hashedpassword))
-
-        user = cursor.fetchone()
-
-        cursor.close()
-        connection.close()
-
-        if user:
+        validateuser = session.query(User).filter(
+            User.email == email, User.user_password == hashedpassword).one_or_none()
+        if validateuser:
             resp = make_response(render_template("home.html"))
             resp.set_cookie("id", email)
             return resp
@@ -111,21 +93,17 @@ def create():
         password = request.form.get("password")
         hashedpassword = hashlib.sha256(password.encode()).hexdigest()
 
-        cursor.execute(
-            "SELECT email FROM user_details WHERE email = %s", (email,))
-        user = cursor.fetchone()
-
-        if user:
+        checkwhether_userExist = session.query(
+            User).filter(User.email == email).one_or_none()
+        if checkwhether_userExist:
             flash("Account is taken, please choose another email")
-        else:
-            cursor.execute(
-                "INSERT INTO user_details (user_name, email, user_password,date_joined) VALUES (%s, %s, %s,%s)",
-                (username, email, hashedpassword,
-                 datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"))
-            )
-            flash("Account created successfully!")
 
-            connection.commit()
+        else:
+            addnewuser = User(username, email, hashedpassword,
+                              datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"))
+            session.add(addnewuser)
+            session.commit()
+            flash("Account created successfully!")
             return redirect(url_for('login'))
 
     cursor.close()
@@ -138,13 +116,11 @@ def create():
 def post():
     if request.method == "POST":
         post_title = request.form.get("title")
-        post_content = request.form.get("post")
+        post = request.form.get("post")
 
         category = request.form.get("category")
 
         myfile = request.files.get("myfile")
-
-        connection = get_db_connection()
 
         if myfile:
             filename = myfile.filename
@@ -153,30 +129,28 @@ def post():
             file_path = os.path.join(upload_folder, myfile.filename)
             myfile.save(file_path)
 
-            connection = get_db_connection()
-            cursor = connection.cursor()
-
             email = request.cookies.get("id")
 
-            cursor.execute(
-                "SELECT id FROM user_details WHERE email=%s", (email,))
+            user_id = session.query(User.id).filter(User.email == email).all()
 
-            user_id = cursor.fetchall()
+            submit_a_post = Posts(
+                post_title, user_id[0][0], category, post, filename)
 
-            cursor.execute("INSERT INTO posts (title, post, date_posted, user_id,category,likes,myfile) VALUES (%s, %s, %s, %s,%s,%s,%s)", (
-                post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0], category, 0, filename))
-            connection.commit()
+            session.add(submit_a_post)
+            session.commit()
+
             return render_template("post.html")
         else:
-            cursor = connection.cursor()
             email = request.cookies.get("id")
-            cursor.execute(
-                "SELECT id FROM user_details WHERE email=%s", (email,))
-            user_id = cursor.fetchall()
 
-            cursor.execute("INSERT INTO posts (title, post, date_posted, user_id,category,likes) VALUES (%s, %s, %s, %s,%s,%s)", (
-                post_title, post_content, datetime.datetime.now().strftime("%B %d  %Y %H:%M:%S"), user_id[0][0], category, 0))
-            connection.commit()
+            user_id = session.query(User.id).filter(User.email == email).all()
+
+            submit_a_post = Posts(post_title, user_id[0][0],
+                                  category, post, "")
+
+            session.add(submit_a_post)
+            session.commit()
+
             return render_template("post.html")
 
     return render_template("post.html")
@@ -188,12 +162,10 @@ def delete_post():
     cursor = connection.cursor()
     post_id = request.form['id']
 
-    cursor.execute("DELETE FROM reply WHERE post_id=%s", (post_id,))
-    cursor.execute("DELETE FROM posts WHERE id = %s", (post_id,))
-    connection.commit()
+    session.query(Reply).filter(Reply.post_id == post_id).delete()
+    session.query(Posts).filter(Posts.id == post_id).delete()
 
-    cursor.close()
-    connection.close()
+    session.commit()
 
     return redirect(url_for('content'))
 
@@ -205,56 +177,28 @@ def dailyFarming():
     cursor = connection.cursor()
 
     my_email = request.cookies.get("id")
-    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
-    my_id = cursor.fetchall()
-    cursor.execute("""
-        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
-        FROM posts
-        INNER JOIN user_details ON posts.user_id = user_details.id
-                   WHERE posts.category='Dairy_farming'
-        ORDER BY posts.likes DESC
-    """)
+    my_id = session.query(User.id).filter(User.email == my_email).all()
 
-    posts = cursor.fetchall()
+    posts = session.query(User.id, User.user_name, Posts.title, Posts.post, Posts.date_posted, Posts.id, Posts.likes, Posts.myfile).join(
+        User, User.id == Posts.user_id).filter(Posts.category == "Dairy_farming").order_by(desc(Posts.category)).all()
 
-    cursor.execute("""
-        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
-        FROM reply
-        INNER JOIN user_details ON reply.user_id = user_details.id
-    """)
-    replies = cursor.fetchall()
-
-    connection.close()
+    replies = session.query(Reply.id, Reply.reply, Reply.post_id, User.user_name).join(
+        User, User.id == Reply.user_id).all()
 
     return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
 
 
 @app.route("/coffee")
 def coffee():
-    connection = get_db_connection()
-    cursor = connection.cursor()
 
     my_email = request.cookies.get("id")
-    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
-    my_id = cursor.fetchall()
+    my_id = session.query(User.id).filter(User.email == my_email).all()
 
-    cursor.execute("""
-        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
-        FROM posts
-        INNER JOIN user_details ON posts.user_id = user_details.id
-                   WHERE posts.category='coffee'
-        ORDER BY posts.likes DESC
-    """)
-    posts = cursor.fetchall()
-    cursor.execute("""
-        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
-        FROM reply
-        INNER JOIN user_details ON reply.user_id = user_details.id
-    """)
-    replies = cursor.fetchall()
+    posts = session.query(User.id, User.user_name, Posts.title, Posts.post, Posts.date_posted, Posts.id, Posts.likes, Posts.myfile).join(
+        User, User.id == Posts.user_id).filter(Posts.category == "coffee").order_by(desc(Posts.likes)).all()
 
-    cursor.close()
-    connection.close()
+    replies = session.query(Reply.id, Reply.reply, Reply.post_id, User.user_name).join(
+        User, User.id == Reply.user_id).all()
 
     if posts:
         return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
@@ -264,30 +208,15 @@ def coffee():
 
 @app.route("/tea")
 def tea():
-    connection = get_db_connection()
-    cursor = connection.cursor()
 
     my_email = request.cookies.get("id")
-    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
-    my_id = cursor.fetchall()
+    my_id = session.query(User.id).filter(User.email == my_email).all()
 
-    cursor.execute("""
-        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
-        FROM posts
-        INNER JOIN user_details ON posts.user_id = user_details.id
-                   WHERE posts.category='tea'
-        ORDER BY posts.likes DESC
-    """)
+    posts = session.query(User.id, User.user_name, Posts.title, Posts.post, Posts.date_posted, Posts.id, Posts.likes, Posts.myfile).join(
+        User, User.id == Posts.user_id).filter(Posts.category == "tea").order_by(desc(Posts.category)).all()
 
-    posts = cursor.fetchall()
-
-    cursor.execute("""
-        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
-        FROM reply
-        INNER JOIN user_details ON reply.user_id = user_details.id
-    """)
-    replies = cursor.fetchall()
-    connection.close()
+    replies = session.query(Reply.id, Reply.reply, Reply.post_id, User.user_name).join(
+        User, User.id == Reply.user_id).all()
 
     if posts:
         return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
@@ -297,30 +226,16 @@ def tea():
 
 @app.route("/maize_farming")
 def maize_farming():
-    connection = get_db_connection()
-    cursor = connection.cursor()
 
     my_email = request.cookies.get("id")
-    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
-    my_id = cursor.fetchall()
+    my_id = session.query(User.id).filter(User.email == my_email).all()
 
-    cursor.execute("""
-        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
-        FROM posts
-        INNER JOIN user_details ON posts.user_id = user_details.id
-                   WHERE posts.category='Maize_farming'
-        ORDER BY posts.likes DESC
-    """)
+    posts = session.query(User.id, User.user_name, Posts.title, Posts.post, Posts.date_posted, Posts.id, Posts.likes, Posts.myfile).join(
+        User, User.id == Posts.user_id).filter(Posts.category == "Maize_farming").order_by(desc(Posts.category)).all()
 
-    posts = cursor.fetchall()
+    replies = session.query(Reply.id, Reply.reply, Reply.post_id, User.user_name).join(
+        User, User.id == Reply.user_id).all()
 
-    cursor.execute("""
-        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
-        FROM reply
-        INNER JOIN user_details ON reply.user_id = user_details.id
-    """)
-    replies = cursor.fetchall()
-    connection.close()
     if posts:
         return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
     else:
@@ -333,26 +248,26 @@ def others():
     cursor = connection.cursor()
 
     my_email = request.cookies.get("id")
-    cursor.execute("SELECT id FROM user_details WHERE email=%s", (my_email,))
-    my_id = cursor.fetchall()
+    my_id = session.query(User.id).filter(User.email == my_email).all()
 
-    cursor.execute("""
-        SELECT user_details.id, user_details.user_name, posts.title, posts.post, posts.date_posted, posts.id, posts.likes, posts.myfile
-        FROM posts
-        INNER JOIN user_details ON posts.user_id = user_details.id
-                   WHERE posts.category='others'
-        ORDER BY posts.likes DESC
-    """)
+    posts = session.query(
+        User.id,
+        User.user_name,
+        Posts.title,
+        Posts.post,
+        Posts.date_posted,
+        Posts.id,
+        Posts.likes,
+        Posts.myfile
+    ).join(Posts, Posts.user_id == User.id).filter(
+        Posts.category == 'others'
+    ).order_by(
+        desc(Posts.likes)
+    ).all()
 
-    posts = cursor.fetchall()
+    replies = session.query(Reply.id, Reply.reply, Reply.post_id, User.user_name).join(
+        User, User.id == Reply.user_id).all()
 
-    cursor.execute("""
-        SELECT reply.id, reply.reply, reply.post_id, user_details.user_name
-        FROM reply
-        INNER JOIN user_details ON reply.user_id = user_details.id
-    """)
-    replies = cursor.fetchall()
-    connection.close()
     if posts:
         return render_template("content.html", posts=posts, id=my_id[0][0], replies=replies)
     else:
@@ -363,13 +278,11 @@ def others():
 def like():
     post_id = request.form.get("post_id")
 
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    session.query(Posts).filter(Posts.id == post_id).update({
+        Posts.likes: Posts.likes + 1
+    })
 
-    cursor.execute(
-        "UPDATE posts SET likes = likes + 1 WHERE id = %s", (post_id,))
-    connection.commit()
-    connection.close()
+    session.commit()
 
     return redirect(url_for('content'))
 
@@ -380,13 +293,10 @@ def edit():
         post_id = request.form.get("post_id")
         post_update = request.form.get("post_update")
 
-        connection = get_db_connection()
-        cursor = connection.cursor()
+        session.query(Posts).filter(Posts.id == post_id).update(
+            {Posts.post: post_update})
+        session.commit()
 
-        cursor.execute("""UPDATE posts SET post=%s
-                       WHERE id=%s""", (post_update, post_id))
-        cursor.close()
-        connection.commit()
         return redirect(url_for('content'))
     else:
         return redirect(url_for('content'))
@@ -395,29 +305,25 @@ def edit():
 @app.route("/reply", methods=["POST", "GET"])
 def reply():
     if request.method == "POST":
-        connection = get_db_connection()
-        cursor = connection.cursor()
 
         user_email = request.cookies.get("id")
-        cursor.execute(
-            "SELECT id FROM user_details WHERE email=%s", (user_email,))
-        user_id = cursor.fetchall()
+
+        getId = session.query(User.id).filter(User.email == user_email).all()
 
         reply = request.form.get("reply")
         post_id = request.form.get("post_id")
 
-        connection = get_db_connection()
-        cursor = connection.cursor()
-        cursor.execute("""INSERT INTO reply(reply,post_id,user_id)
-                       VALUES(%s,%s,%s)""", (reply, post_id, user_id[0][0],))
-        connection.commit()
+        replying = Reply(reply, post_id, getId[0][0])
+        session.add(replying)
+        session.commit()
+
         return redirect(url_for("content"))
     else:
         return redirect(url_for("content"))
 
 
 '''
-This errorHandler catching an error where cookie is empty or has expired
+This errorHandler is catching an error where cookie is empty or has expired
 Ive used cookie to store the email of the user,so ill need to fetch it incase i need to clarify who posted 
 the content
 '''

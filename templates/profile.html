@@ -1,12 +1,17 @@
-{% extends 'home.html' %} {% block content %}
+{% extends 'home.html' %}
+{% block content %}
 <div class="d-flex justify-content-center">
-  <div class="card " style="width: 300px; margin-top: 5%">
+  <div class="card" style="width: 300px; margin-top: 5%">
     <div class="card-body text-center">
-      <h4 class="card-title">User name: {{ data[0][0] }}</h4>
-      <p class="card-text">Date joined: {{ data[0][1] }}</p>
-      <p class="card-text">Email: {{ data[0][2] }}</p>
+      {% for information in data %}
+      <h4 class="card-title">User name: {{ information.user_name }}</h4>
+      <p class="card-text">Date joined: {{ information.date_joined }}</p>
+      <p class="card-text">Email: {{ information.email }}</p>
+      {% endfor %}
       <a href="{{ url_for('firstpage') }}" class="btn btn-outline-danger">Logout</a>
     </div>
   </div>
 </div>
+
+
 {% endblock %}
