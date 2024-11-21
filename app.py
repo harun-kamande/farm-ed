@@ -7,7 +7,6 @@ import hashlib
 from models import User, session, Session, Posts, Reply
 from sqlalchemy import Column, String, ForeignKey, Integer, create_engine, desc
 
-
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "secretkamande"
@@ -311,6 +310,7 @@ def reply():
         getId = session.query(User.id).filter(User.email == user_email).all()
 
         reply = request.form.get("reply")
+        reply = reply.encode("utf8")
         post_id = request.form.get("post_id")
 
         replying = Reply(reply, post_id, getId[0][0])
