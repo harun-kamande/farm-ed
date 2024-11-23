@@ -72,7 +72,7 @@ def login():
             User.email == email, User.user_password == hashedpassword).one_or_none()
         if validateuser:
             resp = make_response(render_template("home.html"))
-            resp.set_cookie("id", email)
+            resp.set_cookie("email", email)
             return resp
         else:
             flash("Wrong password or email. Please try again later.")
